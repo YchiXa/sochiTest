@@ -27,12 +27,13 @@ export async function POST(req: NextRequest) {
             },
          })
 
-         await sendMail({
-            name: config.name,
-            to: email,
-            subject: 'Verify your email.',
-            html: await render(Mail({ code: OTP, name: config.name })),
-         })
+         //TODO: CONFIGURE SMTP ENV VARIABLES
+         // await sendMail({
+         //    name: config.name,
+         //    to: email,
+         //    subject: 'Verify your email.',
+         //    html: await render(Mail({ code: OTP, name: config.name })),
+         // })
 
          return new NextResponse(
             JSON.stringify({
