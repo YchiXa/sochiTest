@@ -1,7 +1,5 @@
 'use client'
 
-import { CommandMenu } from '@/components/composites/command'
-import { SearchMenu } from '@/components/composites/search-menu'
 import { MobileNav } from '@/components/native//nav/mobile'
 import { UserNav } from '@/components/native//nav/user'
 import { MainNav } from '@/components/native/nav/desktop'
@@ -10,8 +8,9 @@ import { useAuthenticated } from '@/hooks/useAuthentication'
 import { LogInIcon, MoonIcon, ShoppingBasketIcon, SunIcon } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import Link from 'next/link'
+import { PropsWithChildren } from 'react'
 
-export default function Header() {
+export default function Header({ children }: PropsWithChildren) {
    const { authenticated } = useAuthenticated()
 
    return (
@@ -20,9 +19,7 @@ export default function Header() {
             <MainNav />
             <MobileNav />
             <div className="flex flex-1 items-center space-x-2 justify-end">
-               <div className="flex-none">
-                  <SearchMenu />
-               </div>
+               <div className="flex-none">{children}</div>
                <CartNav />
                <ThemeToggle />
                {authenticated ? <UserNav /> : <LoginDialog />}

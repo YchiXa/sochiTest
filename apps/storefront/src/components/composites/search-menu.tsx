@@ -24,7 +24,12 @@ import { Search } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { startTransition, useRef, useState } from 'react'
 
-export function SearchMenu() {
+export type SearchMenuProps = {
+   categories: string[]
+   brands: string[]
+}
+
+export function SearchMenu({ categories, brands }: SearchMenuProps) {
    const searchParams = useSearchParams()
    const [open, setOpen] = useState(false)
    const [priceRange, setPriceRange] = useState([
@@ -33,14 +38,6 @@ export function SearchMenu() {
    ])
    const sliderDebounce = useRef<NodeJS.Timeout>(null)
    const router = useRouter()
-
-   const categories = [
-      { id: 'electronics', label: 'Electronics' },
-      { id: 'clothing', label: 'Clothing' },
-      { id: 'books', label: 'Books' },
-      { id: 'home', label: 'Home & Kitchen' },
-      { id: 'sports', label: 'Sports & Outdoors' },
-   ]
 
    function handleSearchWithMultiQueryParam(key: string, value: string) {
       const newSearchParams = new URLSearchParams(searchParams.toString())
@@ -170,24 +167,22 @@ export function SearchMenu() {
                      <div className="grid gap-2">
                         {categories.map((category) => (
                            <div
-                              key={category.id}
+                              key={category}
                               className="flex items-center space-x-2"
                               onClick={() =>
                                  handleSearchWithMultiQueryParam(
                                     'category',
-                                    category.label
+                                    category
                                  )
                               }
                            >
                               <Checkbox
-                                 id={category.id}
+                                 id={category}
                                  defaultChecked={searchParams
                                     .getAll('category')
-                                    .includes(category.label)}
+                                    .includes(category)}
                               />
-                              <Label htmlFor={category.id}>
-                                 {category.label}
-                              </Label>
+                              <Label htmlFor={category}>{category}</Label>
                            </div>
                         ))}
                      </div>
@@ -196,26 +191,21 @@ export function SearchMenu() {
                   <div className="grid gap-2">
                      <h3 className="text-sm font-medium">Brand</h3>
                      <div className="grid gap-2">
-                        {categories.map((category) => (
+                        {brands.map((brand) => (
                            <div
-                              key={category.id}
+                              key={brand}
                               className="flex items-center space-x-2"
                               onClick={() =>
-                                 handleSearchWithMultiQueryParam(
-                                    'category',
-                                    category.label
-                                 )
+                                 handleSearchWithMultiQueryParam('brand', brand)
                               }
                            >
                               <Checkbox
-                                 id={category.id}
+                                 id={brand}
                                  defaultChecked={searchParams
-                                    .getAll('category')
-                                    .includes(category.label)}
+                                    .getAll('brand')
+                                    .includes(brand)}
                               />
-                              <Label htmlFor={category.id}>
-                                 {category.label}
-                              </Label>
+                              <Label htmlFor={brand}>{brand}</Label>
                            </div>
                         ))}
                      </div>
