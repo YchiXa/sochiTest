@@ -1,6 +1,7 @@
 'use client'
 
 import { CommandMenu } from '@/components/composites/command'
+import { SearchMenu } from '@/components/composites/search-menu'
 import { MobileNav } from '@/components/native//nav/mobile'
 import { UserNav } from '@/components/native//nav/user'
 import { MainNav } from '@/components/native/nav/desktop'
@@ -20,7 +21,7 @@ export default function Header() {
             <MobileNav />
             <div className="flex flex-1 items-center space-x-2 justify-end">
                <div className="flex-none">
-                  <CommandMenu />
+                  <SearchMenu />
                </div>
                <CartNav />
                <ThemeToggle />
