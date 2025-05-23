@@ -1,15 +1,37 @@
 {
-   "search.exclude": {
-      "**/package-lock.json": true,
-      "**/node_modules": true,
-      "**/.next": true,
-      "**/dist": true,
-      "**/yarn.lock": true,
-      "**/bun.lockb": true
-   },
-   "eslint.workingDirectories": [
-      "./apps/storefront",
-      "./apps/admin",
-      "./apps/storefront/.react-email"
-   ]
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "deno.enablePaths": [
+    "supabase/functions"
+  ],
+  "deno.lint": true,
+  "deno.unstable": [
+    "bare-node-builtins",
+    "byonm",
+    "sloppy-imports",
+    "unsafe-proto",
+    "webgpu",
+    "broadcast-channel",
+    "worker-options",
+    "cron",
+    "kv",
+    "ffi",
+    "fs",
+    "http",
+    "net"
+  ],
+  "eslint.workingDirectories": [
+    "./apps/storefront",
+    "./apps/admin",
+    "./apps/storefront/.react-email"
+  ],
+  "search.exclude": {
+    "**/.next": true,
+    "**/bun.lockb": true,
+    "**/dist": true,
+    "**/node_modules": true,
+    "**/package-lock.json": true,
+    "**/yarn.lock": true
+  }
 }
