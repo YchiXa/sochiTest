@@ -21,11 +21,18 @@ import {
 } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 import { Search } from 'lucide-react'
-import { useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import React, { startTransition, useRef, useState } from 'react'
 
 export function SearchMenu() {
+   const searchParams = useSearchParams()
    const [open, setOpen] = useState(false)
-   const [priceRange, setPriceRange] = useState([0, 1000])
+   const [priceRange, setPriceRange] = useState([
+      Number(searchParams.get('min_price') ?? '0'),
+      Number(searchParams.get('max_price') ?? '1000'),
+   ])
+   const sliderDebounce = useRef<NodeJS.Timeout>(null)
+   const router = useRouter()
 
    const categories = [
       { id: 'electronics', label: 'Electronics' },
@@ -34,6 +41,70 @@ export function SearchMenu() {
       { id: 'home', label: 'Home & Kitchen' },
       { id: 'sports', label: 'Sports & Outdoors' },
    ]
+
+   function handleSearchWithMultiQueryParam(key: string, value: string) {
+      const newSearchParams = new URLSearchParams(searchParams.toString())
+      const currentMultiValues = newSearchParams.getAll(key)
+
+      if (currentMultiValues.includes(value)) {
+         newSearchParams.delete(key)
+         currentMultiValues
+            .filter((queryValue) => queryValue !== value)
+            .forEach((filteredValue) =>
+               newSearchParams.append(key, filteredValue)
+            )
+      } else {
+         newSearchParams.append(key, value)
+      }
+      startTransition(() => {
+         router.push(`?${newSearchParams.toString()}`, {
+            scroll: false,
+         })
+      })
+   }
+
+   function handleSearchWithQueryParam(key: string, value: string) {
+      const newSearchParams = new URLSearchParams(searchParams.toString())
+      newSearchParams.set(key, value)
+      startTransition(() => {
+         router.push(`?${newSearchParams.toString()}`, {
+            scroll: false,
+         })
+      })
+   }
+
+   function handleSearchForPriceRangeWithText(range: [number, number]) {
+      const newSearchParams = new URLSearchParams(searchParams.toString())
+      newSearchParams.set('min_price', String(range[0]))
+      newSearchParams.set('max_price', String(range[1]))
+
+      setPriceRange(range)
+
+      startTransition(() => {
+         router.push(`?${newSearchParams.toString()}`, {
+            scroll: false,
+         })
+      })
+   }
+
+   function handleSearchForPriceRangeWithSlider(range: [number, number]) {
+      const newSearchParams = new URLSearchParams(searchParams.toString())
+      newSearchParams.set('min_price', String(range[0]))
+      newSearchParams.set('max_price', String(range[1]))
+      setPriceRange(range)
+
+      if (sliderDebounce.current) {
+         clearTimeout(sliderDebounce.current)
+      }
+
+      sliderDebounce.current = setTimeout(() => {
+         startTransition(() => {
+            router.push(`?${newSearchParams.toString()}`, {
+               scroll: false,
+            })
+         })
+      }, 2000)
+   }
 
    return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -55,11 +126,23 @@ export function SearchMenu() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
                <div className="grid gap-2">
-                  <Input placeholder="Search Text" className="h-10" />
+                  <Input
+                     placeholder="Search Text"
+                     className="h-10"
+                     onChange={(e) =>
+                        handleSearchWithQueryParam('search', e.target.value)
+                     }
+                     defaultValue={searchParams.get('search')}
+                  />
                </div>
 
                <div>
-                  <Select>
+                  <Select
+                     defaultValue={searchParams.get('order_by') || undefined}
+                     onValueChange={(value) =>
+                        handleSearchWithQueryParam('order_by', value)
+                     }
+                  >
                      <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Order By" />
                      </SelectTrigger>
@@ -89,8 +172,19 @@ export function SearchMenu() {
                            <div
                               key={category.id}
                               className="flex items-center space-x-2"
+                              onClick={() =>
+                                 handleSearchWithMultiQueryParam(
+                                    'category',
+                                    category.label
+                                 )
+                              }
                            >
-                              <Checkbox id={category.id} />
+                              <Checkbox
+                                 id={category.id}
+                                 defaultChecked={searchParams
+                                    .getAll('category')
+                                    .includes(category.label)}
+                              />
                               <Label htmlFor={category.id}>
                                  {category.label}
                               </Label>
@@ -106,8 +200,19 @@ export function SearchMenu() {
                            <div
                               key={category.id}
                               className="flex items-center space-x-2"
+                              onClick={() =>
+                                 handleSearchWithMultiQueryParam(
+                                    'category',
+                                    category.label
+                                 )
+                              }
                            >
-                              <Checkbox id={category.id} />
+                              <Checkbox
+                                 id={category.id}
+                                 defaultChecked={searchParams
+                                    .getAll('category')
+                                    .includes(category.label)}
+                              />
                               <Label htmlFor={category.id}>
                                  {category.label}
                               </Label>
@@ -124,7 +229,7 @@ export function SearchMenu() {
                      max={1000}
                      step={1}
                      value={priceRange}
-                     onValueChange={setPriceRange}
+                     onValueChange={handleSearchForPriceRangeWithSlider}
                      className="py-4"
                   />
                   <div className="flex items-center justify-between">
@@ -135,7 +240,7 @@ export function SearchMenu() {
                            type="number"
                            value={priceRange[0]}
                            onChange={(e) =>
-                              setPriceRange([
+                              handleSearchForPriceRangeWithText([
                                  Number.parseInt(e.target.value),
                                  priceRange[1],
                               ])
@@ -150,7 +255,7 @@ export function SearchMenu() {
                            type="number"
                            value={priceRange[1]}
                            onChange={(e) =>
-                              setPriceRange([
+                              handleSearchForPriceRangeWithText([
                                  priceRange[0],
                                  Number.parseInt(e.target.value),
                               ])
