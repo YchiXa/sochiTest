@@ -100,7 +100,7 @@ export function SearchMenu({ categories, brands }: SearchMenuProps) {
                scroll: false,
             })
          })
-      }, 2000)
+      }, 500)
    }
 
    return (
