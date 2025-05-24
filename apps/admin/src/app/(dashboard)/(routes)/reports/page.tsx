@@ -1,3 +1,4 @@
+import { DatePicker } from '@/components/date-picker'
 import { Button } from '@/components/ui/button'
 import {
    Card,
@@ -42,20 +43,29 @@ export default async function ReportsPage() {
                </CardDescription>
             </CardHeader>
             <CardContent>
-               <div className="flex flex-wrap w-full max-w-full justify-start gap-x-3">
-                  <div className="space-y-2 flex-grow">
-                     <Label htmlFor="date-from">Date Range</Label>
-                     <div className="flex gap-2">
-                        <div className="relative flex-1">
-                           <div className="flex w-full gap-x-3"></div>
+               <div className="flex flex-col lg:flex-row gap-3 lg:gap-4">
+                  <div className="space-y-2 w-full lg:flex-1">
+                     <Label>Start Date</Label>
+                     <div className="flex flex-grow gap-2">
+                        <div className="relative w-full">
+                           <DatePicker />
                         </div>
                      </div>
                   </div>
 
-                  <div className="space-y-2 flex-grow">
+                  <div className="space-y-2 w-full lg:flex-1">
+                     <Label>End Date</Label>
+                     <div className="flex flex-grow gap-2">
+                        <div className="relative w-full">
+                           <DatePicker />
+                        </div>
+                     </div>
+                  </div>
+
+                  <div className="space-y-2 w-full lg:flex-1">
                      <Label>Categories</Label>
                      <Select>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                            <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
@@ -70,10 +80,10 @@ export default async function ReportsPage() {
                      </Select>
                   </div>
 
-                  <div className="space-y-2 flex-grow">
+                  <div className="space-y-2 w-full lg:flex-1">
                      <Label>Brand</Label>
                      <Select>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                            <SelectValue placeholder="Select brand" />
                         </SelectTrigger>
                         <SelectContent>
