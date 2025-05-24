@@ -54,7 +54,7 @@ export function SearchMenu({ categories, brands }: SearchMenuProps) {
          newSearchParams.append(key, value)
       }
       startTransition(() => {
-         router.push(`?${newSearchParams.toString()}`, {
+         router.replace(`?${newSearchParams.toString()}`, {
             scroll: false,
          })
       })
@@ -64,7 +64,7 @@ export function SearchMenu({ categories, brands }: SearchMenuProps) {
       const newSearchParams = new URLSearchParams(searchParams.toString())
       newSearchParams.set(key, value)
       startTransition(() => {
-         router.push(`?${newSearchParams.toString()}`, {
+         router.replace(`?${newSearchParams.toString()}`, {
             scroll: false,
          })
       })
@@ -78,7 +78,7 @@ export function SearchMenu({ categories, brands }: SearchMenuProps) {
       setPriceRange(range)
 
       startTransition(() => {
-         router.push(`?${newSearchParams.toString()}`, {
+         router.replace(`?${newSearchParams.toString()}`, {
             scroll: false,
          })
       })
@@ -96,7 +96,7 @@ export function SearchMenu({ categories, brands }: SearchMenuProps) {
 
       sliderDebounce.current = setTimeout(() => {
          startTransition(() => {
-            router.push(`?${newSearchParams.toString()}`, {
+            router.replace(`?${newSearchParams.toString()}`, {
                scroll: false,
             })
          })
@@ -168,21 +168,31 @@ export function SearchMenu({ categories, brands }: SearchMenuProps) {
                         {categories.map((category) => (
                            <div
                               key={category}
-                              className="flex items-center space-x-2"
-                              onClick={() =>
-                                 handleSearchWithMultiQueryParam(
-                                    'category',
-                                    category
-                                 )
-                              }
+                              className="flex items-center space-x-2 mt-2"
                            >
                               <Checkbox
                                  id={category}
+                                 onClick={() =>
+                                    handleSearchWithMultiQueryParam(
+                                       'category',
+                                       category
+                                    )
+                                 }
                                  defaultChecked={searchParams
                                     .getAll('category')
                                     .includes(category)}
                               />
-                              <Label htmlFor={category}>{category}</Label>
+                              <Label
+                                 htmlFor={category}
+                                 onClick={() =>
+                                    handleSearchWithMultiQueryParam(
+                                       'category',
+                                       category
+                                    )
+                                 }
+                              >
+                                 {category}
+                              </Label>
                            </div>
                         ))}
                      </div>
@@ -194,18 +204,31 @@ export function SearchMenu({ categories, brands }: SearchMenuProps) {
                         {brands.map((brand) => (
                            <div
                               key={brand}
-                              className="flex items-center space-x-2"
-                              onClick={() =>
-                                 handleSearchWithMultiQueryParam('brand', brand)
-                              }
+                              className="flex items-center space-x-2 mt-2"
                            >
                               <Checkbox
                                  id={brand}
+                                 onClick={() =>
+                                    handleSearchWithMultiQueryParam(
+                                       'brand',
+                                       brand
+                                    )
+                                 }
                                  defaultChecked={searchParams
                                     .getAll('brand')
                                     .includes(brand)}
                               />
-                              <Label htmlFor={brand}>{brand}</Label>
+                              <Label
+                                 htmlFor={brand}
+                                 onClick={() =>
+                                    handleSearchWithMultiQueryParam(
+                                       'brand',
+                                       brand
+                                    )
+                                 }
+                              >
+                                 {brand}
+                              </Label>
                            </div>
                         ))}
                      </div>
