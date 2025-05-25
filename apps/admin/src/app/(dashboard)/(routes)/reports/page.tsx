@@ -1,5 +1,4 @@
-import { DatePicker } from '@/components/date-picker'
-import { Button } from '@/components/ui/button'
+import { ReportsFilter } from '@/components/reports-filter'
 import {
    Card,
    CardContent,
@@ -7,14 +6,6 @@ import {
    CardHeader,
    CardTitle,
 } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import {
-   Select,
-   SelectContent,
-   SelectItem,
-   SelectTrigger,
-   SelectValue,
-} from '@/components/ui/select'
 import {
    Table,
    TableBody,
@@ -24,14 +15,50 @@ import {
    TableRow,
 } from '@/components/ui/table'
 import prisma from '@/lib/prisma'
+import { SearchParams } from '@/types/search-params'
+import { formatSearchParams } from '@/utils/format-search-params'
 import { FilterIcon } from 'lucide-react'
 
-export default async function ReportsPage() {
+type ReportsPageProps = {
+   searchParams: SearchParams
+}
+
+function setDateParamToSearch(startDate: Date | null, endDate: Date | null) {
+   return {
+      createdAt: {
+         ...(startDate ? { gte: startDate } : {}),
+         ...(endDate ? { lte: endDate } : {}),
+      },
+   }
+}
+
+export default async function ReportsPage({ searchParams }: ReportsPageProps) {
+   const { startDate, endDate, brand, category } =
+      formatSearchParams(searchParams)
+
    const categories = await prisma.category.findMany()
    const brands = await prisma.brand.findMany()
    const paidOrders = await prisma.order.findMany({
       where: {
          isPaid: true,
+         orderItems: {
+            every: {
+               product: {
+                  brand: { title: { equals: brand, mode: 'insensitive' } },
+                  categories: {
+                     every: {
+                        title: { equals: category, mode: 'insensitive' },
+                     },
+                  },
+               },
+            },
+         },
+         ...setDateParamToSearch(startDate, endDate),
+      },
+      include: {
+         orderItems: {
+            include: { product: { select: { brand: true, categories: true } } },
+         },
       },
    })
 
@@ -55,10 +82,31 @@ export default async function ReportsPage() {
 
    const distinctOrderItems = await prisma.orderItem.findMany({
       distinct: ['productId'],
+      where: {
+         product: {
+            ...(category
+               ? {
+                    categories: {
+                       every: {
+                          title: { equals: category, mode: 'insensitive' },
+                       },
+                    },
+                 }
+               : {}),
+
+            ...(brand
+               ? { brand: { title: { equals: brand, mode: 'insensitive' } } }
+               : {}),
+         },
+         order: { ...setDateParamToSearch(startDate, endDate), isPaid: true },
+      },
       include: {
+         order: { select: { createdAt: true } },
          product: { select: { title: true, brand: true, categories: true } },
       },
    })
+
+   console.log('distinct orders ', distinctOrderItems)
 
    const orderItemsCount = await prisma.orderItem.groupBy({
       by: ['productId'],
@@ -68,31 +116,39 @@ export default async function ReportsPage() {
       orderBy: { _count: { count: 'desc' } },
    })
 
-   const orderItemsSortedByCount = orderItemsCount.reduce(
-      (acc, orderItemCount) => {
-         const orderitemReference = distinctOrderItems.find(
-            (orderItem) => orderItem.productId === orderItemCount.productId
-         )
+   const orderItemsSortedByCount = orderItemsCount
+      .filter(
+         (orderItemCount) =>
+            !!distinctOrderItems.find(
+               (distinctOrderItem) =>
+                  distinctOrderItem.productId === orderItemCount.productId
+            )
+      )
+      .reduce(
+         (acc, orderItemCount) => {
+            const orderitemReference = distinctOrderItems.find(
+               (orderItem) => orderItem.productId === orderItemCount.productId
+            )
 
-         return [
-            ...acc,
-            {
-               count: orderItemCount._sum.count,
-               title: orderitemReference.product.title,
-               brand: orderitemReference.product.brand.title,
-               categories: orderitemReference.product.categories
-                  .map((category) => category.title)
-                  .join(' '),
-            },
-         ]
-      },
-      [] as Array<{
-         count: number
-         title: string
-         brand: string
-         categories: string[]
-      }>
-   )
+            return [
+               ...acc,
+               {
+                  count: orderItemCount._sum.count,
+                  title: orderitemReference.product.title,
+                  brand: orderitemReference.product.brand.title,
+                  categories: orderitemReference.product.categories
+                     .map((category) => category.title)
+                     .join(' '),
+               },
+            ]
+         },
+         [] as Array<{
+            count: number
+            title: string
+            brand: string
+            categories: string[]
+         }>
+      )
 
    return (
       <div className="container mx-auto p-6 space-y-6">
@@ -111,72 +167,10 @@ export default async function ReportsPage() {
                </CardDescription>
             </CardHeader>
             <CardContent>
-               <div className="flex flex-col lg:flex-row gap-3 lg:gap-4">
-                  <div className="space-y-2 w-full lg:flex-1">
-                     <Label>Start Date</Label>
-                     <div className="flex flex-grow gap-2">
-                        <div className="relative w-full">
-                           <DatePicker />
-                        </div>
-                     </div>
-                  </div>
-
-                  <div className="space-y-2 w-full lg:flex-1">
-                     <Label>End Date</Label>
-                     <div className="flex flex-grow gap-2">
-                        <div className="relative w-full">
-                           <DatePicker />
-                        </div>
-                     </div>
-                  </div>
-
-                  <div className="space-y-2 w-full lg:flex-1">
-                     <Label>Categories</Label>
-                     <Select>
-                        <SelectTrigger className="w-full">
-                           <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                           <SelectItem value="all">All Categories</SelectItem>
-                           {categories.map((category) => (
-                              <SelectItem
-                                 key={category.id}
-                                 value={category.title}
-                                 id={category.id}
-                              >
-                                 {category.title}
-                              </SelectItem>
-                           ))}
-                        </SelectContent>
-                     </Select>
-                  </div>
-
-                  <div className="space-y-2 w-full lg:flex-1">
-                     <Label>Brand</Label>
-                     <Select>
-                        <SelectTrigger className="w-full">
-                           <SelectValue placeholder="Select brand" />
-                        </SelectTrigger>
-                        <SelectContent>
-                           <SelectItem value="all">All Brands</SelectItem>
-                           {brands.map((brand) => (
-                              <SelectItem
-                                 key={brand.id}
-                                 value={brand.title}
-                                 id={brand.title}
-                              >
-                                 {brand.title}
-                              </SelectItem>
-                           ))}
-                        </SelectContent>
-                     </Select>
-                  </div>
-               </div>
-
-               <div className="flex gap-2 mt-4">
-                  <Button>Apply Filters</Button>
-                  <Button variant="outline">Reset</Button>
-               </div>
+               <ReportsFilter
+                  categories={categories.map((category) => category.title)}
+                  brands={brands.map((brand) => brand.title)}
+               />
             </CardContent>
          </Card>
 
