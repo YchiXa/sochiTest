@@ -8,56 +8,12 @@ import { Heading } from '@/components/native/heading'
 import { Separator } from '@/components/native/separator'
 import prisma from '@/lib/prisma'
 import { isVariableValid } from '@/lib/utils'
-
-type SearchParams = Record<string, string | string[]>
+import { SearchParams } from '@/types/search-params'
+import { formatOrderByParam } from '@/utils/format-order-by-param'
+import { formatSearchParams } from '@/utils/format-search-params'
 
 type IndexPageProps = {
    searchParams: SearchParams
-}
-
-function parseQueryParamToString(value: unknown) {
-   return typeof value === 'string' ? value : ''
-}
-
-function parseQueryParamToArray(value: unknown) {
-   return typeof value === 'string'
-      ? [value]
-      : Array.isArray(value)
-        ? value
-        : []
-}
-
-function formatOrderByParam(
-   orderBy: string
-): Parameters<typeof prisma.product.findMany>['0']['orderBy'] {
-   switch (orderBy) {
-      case 'title-asc': {
-         return { title: 'asc' }
-      }
-      case 'title-desc': {
-         return { title: 'desc' }
-      }
-      case 'price-asc': {
-         return { price: 'asc' }
-      }
-      case 'price-desc': {
-         return { price: 'desc' }
-      }
-      default: {
-         return undefined
-      }
-   }
-}
-
-function formatSearchParams(searchParams: SearchParams) {
-   const search = parseQueryParamToString(searchParams['search'])
-   const minPrice = parseQueryParamToString(searchParams['min_price']) || '0'
-   const maxPrice = parseQueryParamToString(searchParams['max_price']) || '1000'
-   const orderBy = parseQueryParamToString(searchParams['order_by'])
-   const category = parseQueryParamToArray(searchParams['category'])
-   const brand = parseQueryParamToArray(searchParams['brand'])
-
-   return { search, minPrice, maxPrice, orderBy, category, brand }
 }
 
 export default async function Index({ searchParams }: IndexPageProps) {
