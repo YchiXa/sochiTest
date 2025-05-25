@@ -23,9 +23,77 @@ import {
    TableHeader,
    TableRow,
 } from '@/components/ui/table'
+import prisma from '@/lib/prisma'
 import { FilterIcon } from 'lucide-react'
 
 export default async function ReportsPage() {
+   const categories = await prisma.category.findMany()
+   const brands = await prisma.brand.findMany()
+   const paidOrders = await prisma.order.findMany({
+      where: {
+         isPaid: true,
+      },
+   })
+
+   const paidOrdersGroupedByDate = paidOrders.reduce(
+      (acc, currentOrder) => {
+         const dateIgnoringTime = new Date(currentOrder.createdAt.toJSON())
+         dateIgnoringTime.setHours(0, 0, 0, 0)
+
+         return {
+            ...acc,
+            [dateIgnoringTime.toJSON()]: [
+               ...(Array.isArray(acc[dateIgnoringTime.toJSON()])
+                  ? acc[dateIgnoringTime.toJSON()]
+                  : []),
+               currentOrder,
+            ],
+         }
+      },
+      {} as Record<string, typeof paidOrders>
+   )
+
+   const distinctOrderItems = await prisma.orderItem.findMany({
+      distinct: ['productId'],
+      include: {
+         product: { select: { title: true, brand: true, categories: true } },
+      },
+   })
+
+   const orderItemsCount = await prisma.orderItem.groupBy({
+      by: ['productId'],
+      _sum: {
+         count: true,
+      },
+      orderBy: { _count: { count: 'desc' } },
+   })
+
+   const orderItemsSortedByCount = orderItemsCount.reduce(
+      (acc, orderItemCount) => {
+         const orderitemReference = distinctOrderItems.find(
+            (orderItem) => orderItem.productId === orderItemCount.productId
+         )
+
+         return [
+            ...acc,
+            {
+               count: orderItemCount._sum.count,
+               title: orderitemReference.product.title,
+               brand: orderitemReference.product.brand.title,
+               categories: orderitemReference.product.categories
+                  .map((category) => category.title)
+                  .join(' '),
+            },
+         ]
+      },
+      [] as Array<{
+         count: number
+         title: string
+         brand: string
+         categories: string[]
+      }>
+   )
+
    return (
       <div className="container mx-auto p-6 space-y-6">
          <header className="flex items-center justify-between">
@@ -70,12 +138,15 @@ export default async function ReportsPage() {
                         </SelectTrigger>
                         <SelectContent>
                            <SelectItem value="all">All Categories</SelectItem>
-                           <SelectItem value="electronics">
-                              Electronics
-                           </SelectItem>
-                           <SelectItem value="clothing">Clothing</SelectItem>
-                           <SelectItem value="books">Books</SelectItem>
-                           <SelectItem value="home">Home & Garden</SelectItem>
+                           {categories.map((category) => (
+                              <SelectItem
+                                 key={category.id}
+                                 value={category.title}
+                                 id={category.id}
+                              >
+                                 {category.title}
+                              </SelectItem>
+                           ))}
                         </SelectContent>
                      </Select>
                   </div>
@@ -88,10 +159,15 @@ export default async function ReportsPage() {
                         </SelectTrigger>
                         <SelectContent>
                            <SelectItem value="all">All Brands</SelectItem>
-                           <SelectItem value="apple">Apple</SelectItem>
-                           <SelectItem value="samsung">Samsung</SelectItem>
-                           <SelectItem value="nike">Nike</SelectItem>
-                           <SelectItem value="adidas">Adidas</SelectItem>
+                           {brands.map((brand) => (
+                              <SelectItem
+                                 key={brand.id}
+                                 value={brand.title}
+                                 id={brand.title}
+                              >
+                                 {brand.title}
+                              </SelectItem>
+                           ))}
                         </SelectContent>
                      </Select>
                   </div>
@@ -114,34 +190,28 @@ export default async function ReportsPage() {
                </CardHeader>
                <CardContent>
                   <div className="space-y-4">
-                     <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                        <span className="font-medium">2024-01-15</span>
-                        <span className="text-sm text-muted-foreground">
-                           25 orders
-                        </span>
-                        <span className="font-semibold">$2,450.00</span>
-                     </div>
-                     <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                        <span className="font-medium">2024-01-14</span>
-                        <span className="text-sm text-muted-foreground">
-                           18 orders
-                        </span>
-                        <span className="font-semibold">$1,890.00</span>
-                     </div>
-                     <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                        <span className="font-medium">2024-01-13</span>
-                        <span className="text-sm text-muted-foreground">
-                           32 orders
-                        </span>
-                        <span className="font-semibold">$3,120.00</span>
-                     </div>
-                     <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                        <span className="font-medium">2024-01-12</span>
-                        <span className="text-sm text-muted-foreground">
-                           21 orders
-                        </span>
-                        <span className="font-semibold">$2,100.00</span>
-                     </div>
+                     {Object.entries(paidOrdersGroupedByDate).map(
+                        ([date, orders]) => (
+                           <div
+                              key={date}
+                              className="flex justify-between items-center p-3 bg-muted rounded-lg"
+                           >
+                              <span className="font-medium">
+                                 {new Date(date).toDateString()}
+                              </span>
+                              <span className="text-sm text-muted-foreground">
+                                 {orders.length} orders
+                              </span>
+                              <span className="font-semibold">
+                                 $
+                                 {orders.reduce(
+                                    (acc, order) => acc + order.payable,
+                                    0
+                                 )}
+                              </span>
+                           </div>
+                        )
+                     )}
                   </div>
                </CardContent>
             </Card>
@@ -166,38 +236,18 @@ export default async function ReportsPage() {
                         </TableRow>
                      </TableHeader>
                      <TableBody>
-                        <TableRow>
-                           <TableCell className="font-medium">
-                              iPhone 15 Pro
-                           </TableCell>
-                           <TableCell>Electronics</TableCell>
-                           <TableCell>Apple</TableCell>
-                           <TableCell className="text-right">156</TableCell>
-                        </TableRow>
-                        <TableRow>
-                           <TableCell className="font-medium">
-                              Air Jordan 1
-                           </TableCell>
-                           <TableCell>Clothing</TableCell>
-                           <TableCell>Nike</TableCell>
-                           <TableCell className="text-right">89</TableCell>
-                        </TableRow>
-                        <TableRow>
-                           <TableCell className="font-medium">
-                              Galaxy S24
-                           </TableCell>
-                           <TableCell>Electronics</TableCell>
-                           <TableCell>Samsung</TableCell>
-                           <TableCell className="text-right">67</TableCell>
-                        </TableRow>
-                        <TableRow>
-                           <TableCell className="font-medium">
-                              Ultraboost 22
-                           </TableCell>
-                           <TableCell>Clothing</TableCell>
-                           <TableCell>Adidas</TableCell>
-                           <TableCell className="text-right">45</TableCell>
-                        </TableRow>
+                        {orderItemsSortedByCount.map((orderItem) => (
+                           <TableRow key={orderItem.title}>
+                              <TableCell className="font-medium">
+                                 {orderItem.title}
+                              </TableCell>
+                              <TableCell>{orderItem.categories}</TableCell>
+                              <TableCell>{orderItem.brand}</TableCell>
+                              <TableCell className="text-right">
+                                 {orderItem.count}
+                              </TableCell>
+                           </TableRow>
+                        ))}
                      </TableBody>
                   </Table>
                </CardContent>
