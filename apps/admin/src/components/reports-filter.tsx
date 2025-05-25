@@ -11,7 +11,7 @@ import {
    SelectValue,
 } from '@/components/ui/select'
 import { parseQueryParamToDate } from '@/utils/format-search-params'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { startTransition, useState } from 'react'
 
 export type ReportsFilterProps = {
@@ -27,12 +27,13 @@ export type SelectedFilters = {
 }
 
 export function ReportsFilter({ categories, brands }: ReportsFilterProps) {
+   const searchParams = useSearchParams()
    const router = useRouter()
    const [selectedFilters, setSelectedFilters] = useState({
-      category: '',
-      brand: '',
-      startDate: undefined,
-      endDate: undefined,
+      category: searchParams.get('category') ?? '',
+      brand: searchParams.get('brand') ?? '',
+      startDate: searchParams.get('start_date') || undefined,
+      endDate: searchParams.get('end_date') || undefined,
    })
 
    function handleUpdateSelectedFilters(partial: Partial<SelectedFilters>) {
@@ -43,11 +44,15 @@ export function ReportsFilter({ categories, brands }: ReportsFilterProps) {
       const newSearchParams = new URLSearchParams()
 
       if (selectedFilters.category) {
-         newSearchParams.set('category', selectedFilters.category)
+         selectedFilters.category === 'all'
+            ? newSearchParams.delete('category')
+            : newSearchParams.set('category', selectedFilters.category)
       }
 
       if (selectedFilters.brand) {
-         newSearchParams.set('brand', selectedFilters.brand)
+         selectedFilters.brand === 'all'
+            ? newSearchParams.delete('brand')
+            : newSearchParams.set('brand', selectedFilters.brand)
       }
 
       if (selectedFilters.startDate) {
@@ -118,6 +123,7 @@ export function ReportsFilter({ categories, brands }: ReportsFilterProps) {
             <div className="space-y-2 w-full lg:flex-1">
                <Label>Categories</Label>
                <Select
+                  defaultValue={selectedFilters.category}
                   onValueChange={(value) =>
                      handleUpdateSelectedFilters({ category: value })
                   }
@@ -143,6 +149,7 @@ export function ReportsFilter({ categories, brands }: ReportsFilterProps) {
             <div className="space-y-2 w-full lg:flex-1">
                <Label>Brand</Label>
                <Select
+                  defaultValue={selectedFilters.brand}
                   onValueChange={(value) =>
                      handleUpdateSelectedFilters({ brand: value })
                   }
