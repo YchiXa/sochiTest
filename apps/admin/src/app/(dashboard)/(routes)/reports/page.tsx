@@ -44,12 +44,25 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
          orderItems: {
             every: {
                product: {
-                  brand: { title: { equals: brand, mode: 'insensitive' } },
-                  categories: {
-                     every: {
-                        title: { equals: category, mode: 'insensitive' },
-                     },
-                  },
+                  ...(brand
+                     ? {
+                          brand: {
+                             title: { equals: brand, mode: 'insensitive' },
+                          },
+                       }
+                     : {}),
+                  ...(category
+                     ? {
+                          categories: {
+                             every: {
+                                title: {
+                                   equals: category,
+                                   mode: 'insensitive',
+                                },
+                             },
+                          },
+                       }
+                     : {}),
                },
             },
          },
@@ -106,12 +119,30 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
       },
    })
 
-   console.log('distinct orders ', distinctOrderItems)
-
    const orderItemsCount = await prisma.orderItem.groupBy({
       by: ['productId'],
       _sum: {
          count: true,
+      },
+      where: {
+         order: {
+            ...setDateParamToSearch(startDate, endDate),
+         },
+         product: {
+            ...(category
+               ? {
+                    categories: {
+                       every: {
+                          title: { equals: category, mode: 'insensitive' },
+                       },
+                    },
+                 }
+               : {}),
+
+            ...(brand
+               ? { brand: { title: { equals: brand, mode: 'insensitive' } } }
+               : {}),
+         },
       },
       orderBy: { _count: { count: 'desc' } },
    })
@@ -184,6 +215,9 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
                </CardHeader>
                <CardContent>
                   <div className="space-y-4">
+                     {Object.entries(paidOrdersGroupedByDate).length === 0 && (
+                        <strong>No Orders Found</strong>
+                     )}
                      {Object.entries(paidOrdersGroupedByDate).map(
                         ([date, orders]) => (
                            <div
