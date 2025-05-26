@@ -1,13 +1,20 @@
-import { getLocalCart, writeLocalCart } from '@/lib/cart'
+'use client'
+
+import { useAuthenticated } from '@/hooks/useAuthentication'
+import { getCountInCart, getLocalCart, writeLocalCart } from '@/lib/cart'
 import { isVariableValid } from '@/lib/utils'
 import { useUserContext } from '@/state/User'
+import { Product } from '@prisma/client'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 const CartContext = createContext({
    cart: null,
    loading: true,
+   fetchingCart: false,
    refreshCart: () => {},
    dispatchCart: (object) => {},
+   onAddToCart: (product: Product) => {},
+   onRemoveFromCart: (product: Product) => {},
 })
 
 export const useCartContext = () => {
@@ -16,9 +23,10 @@ export const useCartContext = () => {
 
 export const CartContextProvider = ({ children }) => {
    const { refreshUser, user } = useUserContext()
-
+   const { authenticated } = useAuthenticated()
    const [cart, setCart] = useState(null)
    const [loading, setLoading] = useState(true)
+   const [fetchingCart, setFetchingCart] = useState(false)
 
    const dispatchCart = async (cart) => {
       setCart(cart)
@@ -37,6 +45,131 @@ export const CartContextProvider = ({ children }) => {
       setLoading(false)
    }
 
+   function findLocalCartIndexById(array, productId) {
+      for (let i = 0; i < array.length; i++) {
+         if (array?.items[i]?.productId === productId) {
+            return i
+         }
+      }
+      return -1
+   }
+
+   async function onAddToCart(product: Product) {
+      console.log("i'm clicking here", product)
+      try {
+         setFetchingCart(true)
+
+         const count = getCountInCart({
+            cartItems: cart?.items,
+            productId: product?.id,
+         })
+
+         if (authenticated) {
+            const response = await fetch(`/api/cart`, {
+               method: 'POST',
+               body: JSON.stringify({
+                  productId: product?.id,
+                  count:
+                     getCountInCart({
+                        cartItems: cart?.items,
+                        productId: product?.id,
+                     }) + 1,
+               }),
+               cache: 'no-store',
+               headers: {
+                  'Content-Type': 'application/json-string',
+               },
+            })
+
+            const json = await response.json()
+
+            dispatchCart(json)
+         }
+
+         const localCart = getLocalCart() as any
+
+         if (!authenticated && count > 0) {
+            for (let i = 0; i < localCart.items.length; i++) {
+               if (localCart.items[i].productId === product?.id) {
+                  localCart.items[i].count = localCart.items[i].count + 1
+               }
+            }
+
+            dispatchCart(localCart)
+         }
+
+         if (!authenticated && count < 1) {
+            localCart.items.push({
+               productId: product?.id,
+               product,
+               count: 1,
+            })
+
+            dispatchCart(localCart)
+         }
+
+         setFetchingCart(false)
+      } catch (error) {
+         console.error({ error })
+      }
+   }
+
+   async function onRemoveFromCart(product: Product) {
+      try {
+         setFetchingCart(true)
+
+         const count = getCountInCart({
+            cartItems: cart?.items,
+            productId: product?.id,
+         })
+
+         if (authenticated) {
+            const response = await fetch(`/api/cart`, {
+               method: 'POST',
+               body: JSON.stringify({
+                  productId: product?.id,
+                  count:
+                     getCountInCart({
+                        cartItems: cart?.items,
+                        productId: product?.id,
+                     }) - 1,
+               }),
+               cache: 'no-store',
+               headers: {
+                  'Content-Type': 'application/json-string',
+               },
+            })
+
+            const json = await response.json()
+
+            dispatchCart(json)
+         }
+
+         const localCart = getLocalCart() as any
+         const index = findLocalCartIndexById(localCart, product?.id)
+
+         if (!authenticated && count > 1) {
+            for (let i = 0; i < localCart.items.length; i++) {
+               if (localCart.items[i].productId === product?.id) {
+                  localCart.items[i].count = localCart.items[i].count - 1
+               }
+            }
+
+            dispatchCart(localCart)
+         }
+
+         if (!authenticated && count === 1) {
+            localCart.items.splice(index, 1)
+
+            dispatchCart(localCart)
+         }
+
+         setFetchingCart(false)
+      } catch (error) {
+         console.error({ error })
+      }
+   }
+
    useEffect(() => {
       if (isVariableValid(user)) {
          setCart(user?.cart)
@@ -50,7 +183,15 @@ export const CartContextProvider = ({ children }) => {
 
    return (
       <CartContext.Provider
-         value={{ cart, loading, refreshCart, dispatchCart }}
+         value={{
+            cart,
+            loading,
+            refreshCart,
+            dispatchCart,
+            fetchingCart,
+            onAddToCart,
+            onRemoveFromCart,
+         }}
       >
          {children}
       </CartContext.Provider>

@@ -1,6 +1,7 @@
 import Carousel from '@/components/native/Carousel'
 import prisma from '@/lib/prisma'
 import { isVariableValid } from '@/lib/utils'
+import { CartContextProvider } from '@/state/Cart'
 import { ChevronRightIcon } from 'lucide-react'
 import type { Metadata, ResolvingMetadata } from 'next'
 import Link from 'next/link'
@@ -45,23 +46,15 @@ export default async function Product({
       include: {
          categories: true,
          brand: true,
-         crossSells: {
-            select: { id: true, title: true, price: true, images: true },
-         },
+         crossSells: true,
       },
    })
 
-   const crossSells =
-      product?.crossSells?.map((product) => ({
-         id: product.id,
-         title: product.title,
-         image: product.images[0],
-         price: product.price,
-      })) ?? []
+   const crossSells = product?.crossSells ?? []
 
    if (isVariableValid(product)) {
       return (
-         <>
+         <CartContextProvider>
             <Breadcrumbs product={product} />
             <div className="mt-6 grid grid-cols-1 gap-2 md:grid-cols-3">
                <ImageColumn product={product} />
@@ -70,7 +63,7 @@ export default async function Product({
             {crossSells.length > 0 && (
                <CrossSellProductsList products={crossSells} />
             )}
-         </>
+         </CartContextProvider>
       )
    }
 }
