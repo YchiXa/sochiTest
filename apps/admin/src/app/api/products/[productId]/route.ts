@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma'
+
 import { NextResponse } from 'next/server'
 
 export async function GET(
@@ -68,9 +69,17 @@ export async function PATCH(
          return new NextResponse('Unauthorized', { status: 401 })
       }
 
+      const json = await req.json()
+
       const {
-         data: { title, price, discount, stock, isFeatured, isAvailable },
-      } = await req.json()
+         data: title,
+         price,
+         discount,
+         stock,
+         isFeatured,
+         isAvailable,
+         crossSells
+      } = json
 
       const product = await prisma.product.update({
          where: {
@@ -83,6 +92,9 @@ export async function PATCH(
             stock,
             isFeatured,
             isAvailable,
+            crossSells: {
+               connect: Array.isArray(crossSells) ? crossSells.map(id => ({id: id})) : []
+            }
          },
       })
 

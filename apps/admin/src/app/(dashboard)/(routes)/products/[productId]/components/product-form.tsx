@@ -25,13 +25,15 @@ import {
 import { Separator } from '@/components/ui/separator'
 import type { ProductWithIncludes } from '@/types/prisma'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Category } from '@prisma/client'
+import { Category, Product } from '@prisma/client'
 import { Trash } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import * as z from 'zod'
+
+import { CrossSellProducts } from './cross-sell-products'
 
 const formSchema = z.object({
    title: z.string().min(1),
@@ -42,6 +44,7 @@ const formSchema = z.object({
    categoryId: z.string().min(1),
    isFeatured: z.boolean().default(false).optional(),
    isAvailable: z.boolean().default(false).optional(),
+   crossSells: z.string().array().default([]).optional(),
 })
 
 type ProductFormValues = z.infer<typeof formSchema>
@@ -49,16 +52,19 @@ type ProductFormValues = z.infer<typeof formSchema>
 interface ProductFormProps {
    initialData: ProductWithIncludes | null
    categories: Category[]
+   listofProducts: Product[]
 }
 
 export const ProductForm: React.FC<ProductFormProps> = ({
    initialData,
    categories,
+   listofProducts,
 }) => {
    const params = useParams()
    const router = useRouter()
 
    const [open, setOpen] = useState(false)
+   const [searchTerm, setSearchTerm] = useState('')
    const [loading, setLoading] = useState(false)
 
    const title = initialData ? 'Edit product' : 'Create product'
@@ -71,6 +77,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
            ...initialData,
            price: parseFloat(String(initialData?.price.toFixed(2))),
            discount: parseFloat(String(initialData?.discount.toFixed(2))),
+           crossSells:
+              initialData?.crossSells?.map((product) => product.id) ?? [],
         }
       : {
            title: '---',
@@ -82,6 +90,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
            categoryId: '---',
            isFeatured: false,
            isAvailable: false,
+           crossSells: [],
         }
 
    const form = useForm<ProductFormValues>({
@@ -342,6 +351,25 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   {action}
                </Button>
             </form>
+
+            <Separator />
+            <div className="mt-8">
+               <Form {...form}>
+                  <FormField
+                     name="crossSells"
+                     control={form.control}
+                     render={({ field }) => (
+                        <CrossSellProducts
+                           products={listofProducts}
+                           selectedProducts={field.value}
+                           searchTerm={searchTerm}
+                           handleChangeSearchTerm={setSearchTerm}
+                           handleSelectProduct={field.onChange}
+                        />
+                     )}
+                  />
+               </Form>
+            </div>
          </Form>
       </>
    )
