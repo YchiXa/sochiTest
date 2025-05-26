@@ -3,164 +3,27 @@
 import { Spinner } from '@/components/native/icons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-   Card,
-   CardContent,
-   CardDescription,
-   CardFooter,
-   CardHeader,
-   CardTitle,
-} from '@/components/ui/card'
-import { useAuthenticated } from '@/hooks/useAuthentication'
-import { getCountInCart, getLocalCart, writeLocalCart } from '@/lib/cart'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { getCountInCart } from '@/lib/cart'
 import { useCartContext } from '@/state/Cart'
+import { ProductWithCrossSell } from '@/types/prisma'
+import { Product } from '@prisma/client'
 import { MinusIcon, PlusIcon, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 
-export const Item = ({ cartItem }) => {
-   const { authenticated } = useAuthenticated()
-   const { loading, cart, refreshCart, dispatchCart } = useCartContext()
-   const [fetchingCart, setFetchingCart] = useState(false)
-
-   const { product, productId, count } = cartItem
-
-   function findLocalCartIndexById(array, productId) {
-      for (let i = 0; i < array.length; i++) {
-         if (array?.items[i]?.productId === productId) {
-            return i
-         }
-      }
-      return -1
+export type ItemProps = {
+   cartItem: {
+      product: ProductWithCrossSell
+      productId: string
+      count: number
    }
+}
 
-   async function getProduct() {
-      try {
-         const response = await fetch(`/api/product`, {
-            method: 'POST',
-            body: JSON.stringify({ productId }),
-            cache: 'no-store',
-            headers: {
-               'Content-Type': 'application/json-string',
-            },
-         })
-
-         return await response.json()
-      } catch (error) {
-         console.error({ error })
-      }
-   }
-
-   async function onAddToCart() {
-      try {
-         setFetchingCart(true)
-
-         if (authenticated) {
-            const response = await fetch(`/api/cart`, {
-               method: 'POST',
-               body: JSON.stringify({
-                  productId,
-                  count:
-                     getCountInCart({ cartItems: cart?.items, productId }) + 1,
-               }),
-               cache: 'no-store',
-               headers: {
-                  'Content-Type': 'application/json-string',
-               },
-            })
-
-            const json = await response.json()
-
-            dispatchCart(json)
-         }
-
-         const localCart = getLocalCart() as any
-
-         if (
-            !authenticated &&
-            getCountInCart({ cartItems: cart?.items, productId }) > 0
-         ) {
-            for (let i = 0; i < localCart.items.length; i++) {
-               if (localCart.items[i].productId === productId) {
-                  localCart.items[i].count = localCart.items[i].count + 1
-               }
-            }
-
-            dispatchCart(localCart)
-         }
-
-         if (
-            !authenticated &&
-            getCountInCart({ cartItems: cart?.items, productId }) < 1
-         ) {
-            localCart.items.push({
-               productId,
-               product: await getProduct(),
-               count: 1,
-            })
-
-            dispatchCart(localCart)
-         }
-
-         setFetchingCart(false)
-      } catch (error) {
-         console.error({ error })
-      }
-   }
-
-   async function onRemoveFromCart() {
-      try {
-         setFetchingCart(true)
-
-         if (authenticated) {
-            const response = await fetch(`/api/cart`, {
-               method: 'POST',
-               body: JSON.stringify({
-                  productId,
-                  count:
-                     getCountInCart({ cartItems: cart?.items, productId }) - 1,
-               }),
-               cache: 'no-store',
-               headers: {
-                  'Content-Type': 'application/json-string',
-               },
-            })
-
-            const json = await response.json()
-            dispatchCart(json)
-         }
-
-         const localCart = getLocalCart() as any
-         const index = findLocalCartIndexById(localCart, productId)
-
-         if (
-            !authenticated &&
-            getCountInCart({ cartItems: cart?.items, productId }) > 1
-         ) {
-            for (let i = 0; i < localCart.items.length; i++) {
-               if (localCart.items[i].productId === product?.id) {
-                  localCart.items[i].count = localCart.items[i].count - 1
-               }
-            }
-
-            dispatchCart(localCart)
-         }
-
-         if (
-            !authenticated &&
-            getCountInCart({ cartItems: cart?.items, productId }) === 1
-         ) {
-            localCart.items.splice(index, 1)
-
-            dispatchCart(localCart)
-         }
-
-         setFetchingCart(false)
-      } catch (error) {
-         console.error({ error })
-      }
-   }
+export const Item = ({ cartItem }: ItemProps) => {
+   const { product, productId } = cartItem
+   const { cart, fetchingCart, onAddToCart, onRemoveFromCart } =
+      useCartContext()
 
    function CartButton() {
       const count = getCountInCart({
@@ -176,13 +39,19 @@ export const Item = ({ cartItem }) => {
          )
 
       if (count === 0) {
-         return <Button onClick={onAddToCart}>🛒 Add to Cart</Button>
+         return (
+            <Button onClick={() => onAddToCart(product)}>🛒 Add to Cart</Button>
+         )
       }
 
       if (count > 0) {
          return (
             <>
-               <Button variant="outline" size="icon" onClick={onRemoveFromCart}>
+               <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => onRemoveFromCart(product)}
+               >
                   {count === 1 ? (
                      <X className="h-4" />
                   ) : (
@@ -196,7 +65,7 @@ export const Item = ({ cartItem }) => {
                   disabled={productId == ''}
                   variant="outline"
                   size="icon"
-                  onClick={onAddToCart}
+                  onClick={() => onAddToCart(product)}
                >
                   <PlusIcon className="h-4" />
                </Button>
@@ -205,7 +74,7 @@ export const Item = ({ cartItem }) => {
       }
    }
 
-   function Price() {
+   function showPrice(product: Product) {
       if (product?.discount > 0) {
          const price = product?.price - product?.discount
          const percentage = (product?.discount / product?.price) * 100
@@ -222,45 +91,97 @@ export const Item = ({ cartItem }) => {
 
       return <h2>${product?.price}</h2>
    }
+
    return (
-      <Card>
-         <CardHeader className="p-0 md:hidden">
-            <div className="relative h-32 w-full">
-               <Link href={`/products/${product?.id}`}>
-                  <Image
-                     className="rounded-t-lg"
-                     src={product?.images[0]}
-                     alt="product image"
-                     fill
-                     sizes="(min-width: 1000px) 30vw, 50vw"
-                     style={{ objectFit: 'cover' }}
-                  />
-               </Link>
-            </div>
-         </CardHeader>
-         <CardContent className="grid grid-cols-6 gap-4 p-3">
-            <div className="relative w-full col-span-2 hidden md:inline-flex">
-               <Link href={`/products/${product?.id}`}>
-                  <Image
-                     className="rounded-lg"
-                     src={product?.images[0]}
-                     alt="item image"
-                     fill
-                     style={{ objectFit: 'cover' }}
-                  />
-               </Link>
-            </div>
-            <div className="col-span-4 block space-y-2">
-               <Link href={`/products/${product?.id}`}>
-                  <h2>{product?.title}</h2>
-               </Link>
-               <p className="text-xs text-muted-foreground text-justify">
-                  {product?.description}
-               </p>
-               <Price />
-               <CartButton />
-            </div>
-         </CardContent>
+      <Card className="p-4">
+         <Card>
+            <CardHeader className="p-0 md:hidden">
+               <div className="relative h-32 w-full">
+                  <Link href={`/products/${product?.id}`}>
+                     <Image
+                        className="rounded-t-lg"
+                        src={product?.images[0]}
+                        alt="product image"
+                        fill
+                        sizes="(min-width: 1000px) 30vw, 50vw"
+                        style={{ objectFit: 'cover' }}
+                     />
+                  </Link>
+               </div>
+            </CardHeader>
+            <CardContent className="grid grid-cols-6 gap-4 p-3">
+               <div className="relative w-full col-span-2 hidden md:inline-flex">
+                  <Link href={`/products/${product?.id}`}>
+                     <Image
+                        className="rounded-lg"
+                        src={product?.images[0]}
+                        alt="item image"
+                        fill
+                        style={{ objectFit: 'cover' }}
+                     />
+                  </Link>
+               </div>
+               <div className="col-span-4 block space-y-2">
+                  <Link href={`/products/${product?.id}`}>
+                     <h2>{product?.title}</h2>
+                  </Link>
+                  <p className="text-xs text-muted-foreground text-justify">
+                     {product?.description}
+                  </p>
+                  {showPrice(product)}
+                  <CartButton />
+               </div>
+            </CardContent>
+         </Card>
+
+         {product?.crossSells?.length > 0 && (
+            <Card className="my-4">
+               <CardContent className="p-4">
+                  <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                     You might also like
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                     {product.crossSells.map((crossSellProduct) => (
+                        <div
+                           key={crossSellProduct.id}
+                           className="border rounded-lg p-3 space-y-2"
+                        >
+                           <div className="relative h-20 w-full">
+                              <Link href={`/products/${crossSellProduct.id}`}>
+                                 <Image
+                                    className="rounded"
+                                    src={
+                                       crossSellProduct.images[0] ||
+                                       '/placeholder.svg'
+                                    }
+                                    alt={crossSellProduct.title}
+                                    fill
+                                    sizes="(min-width: 1024px) 20vw, (min-width: 640px) 30vw, 50vw"
+                                    style={{ objectFit: 'cover' }}
+                                 />
+                              </Link>
+                           </div>
+                           <div className="space-y-1">
+                              <Link href={`/products/${crossSellProduct.id}`}>
+                                 <h4
+                                    className="text-sm font-medium hover:underline overflow-hidden"
+                                    style={{
+                                       display: '-webkit-box',
+                                       WebkitLineClamp: 2,
+                                       WebkitBoxOrient: 'vertical',
+                                    }}
+                                 >
+                                    {crossSellProduct.title}
+                                 </h4>
+                              </Link>
+                              {showPrice(crossSellProduct)}
+                           </div>
+                        </div>
+                     ))}
+                  </div>
+               </CardContent>
+            </Card>
+         )}
       </Card>
    )
 }

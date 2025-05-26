@@ -23,7 +23,7 @@ export const useCartContext = () => {
 }
 
 export const CartContextProvider = ({ children }) => {
-   const { refreshUser, user } = useUserContext()
+   const { user } = useUserContext()
    const { authenticated } = useAuthenticated()
    const [cart, setCart] = useState(null)
    const [loading, setLoading] = useState(true)

@@ -9,7 +9,7 @@ import { Receipt } from './receipt'
 import { Skeleton } from './skeleton'
 
 export const CartGrid = () => {
-   const { loading, cart, refreshCart, dispatchCart } = useCartContext()
+   const { cart } = useCartContext()
 
    if (isVariableValid(cart?.items) && cart?.items?.length === 0) {
       return (

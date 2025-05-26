@@ -49,7 +49,6 @@ export default async function Product({
          crossSells: true,
       },
    })
-
    const crossSells = product?.crossSells ?? []
 
    if (isVariableValid(product)) {
