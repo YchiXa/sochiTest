@@ -5,6 +5,7 @@ import { ChevronRightIcon } from 'lucide-react'
 import type { Metadata, ResolvingMetadata } from 'next'
 import Link from 'next/link'
 
+import { CrossSellProductsList } from './components/cross-sell-list'
 import { DataSection } from './components/data'
 
 type Props = {
@@ -42,10 +43,21 @@ export default async function Product({
          id: params.productId,
       },
       include: {
-         brand: true,
          categories: true,
+         brand: true,
+         crossSells: {
+            select: { id: true, title: true, price: true, images: true },
+         },
       },
    })
+
+   const crossSells =
+      product?.crossSells?.map((product) => ({
+         id: product.id,
+         title: product.title,
+         image: product.images[0],
+         price: product.price,
+      })) ?? []
 
    if (isVariableValid(product)) {
       return (
@@ -55,6 +67,7 @@ export default async function Product({
                <ImageColumn product={product} />
                <DataSection product={product} />
             </div>
+            <CrossSellProductsList products={crossSells} />
          </>
       )
    }
