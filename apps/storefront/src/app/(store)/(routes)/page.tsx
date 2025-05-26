@@ -24,6 +24,7 @@ export default async function Index({ searchParams }: IndexPageProps) {
       include: {
          brand: true,
          categories: true,
+         crossSells: { select: { id: true } },
       },
       orderBy: formatOrderByParam(orderBy),
       where: {

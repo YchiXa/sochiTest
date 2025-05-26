@@ -67,7 +67,9 @@ export default async function Product({
                <ImageColumn product={product} />
                <DataSection product={product} />
             </div>
-            <CrossSellProductsList products={crossSells} />
+            {crossSells.length > 0 && (
+               <CrossSellProductsList products={crossSells} />
+            )}
          </>
       )
    }
