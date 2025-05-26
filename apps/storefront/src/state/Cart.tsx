@@ -1,5 +1,6 @@
 'use client'
 
+import { useToast } from '@/hooks/use-toast'
 import { useAuthenticated } from '@/hooks/useAuthentication'
 import { getCountInCart, getLocalCart, writeLocalCart } from '@/lib/cart'
 import { isVariableValid } from '@/lib/utils'
@@ -27,6 +28,7 @@ export const CartContextProvider = ({ children }) => {
    const [cart, setCart] = useState(null)
    const [loading, setLoading] = useState(true)
    const [fetchingCart, setFetchingCart] = useState(false)
+   const { toast } = useToast()
 
    const dispatchCart = async (cart) => {
       setCart(cart)
@@ -55,7 +57,6 @@ export const CartContextProvider = ({ children }) => {
    }
 
    async function onAddToCart(product: Product) {
-      console.log("i'm clicking here", product)
       try {
          setFetchingCart(true)
 
@@ -109,6 +110,10 @@ export const CartContextProvider = ({ children }) => {
          }
 
          setFetchingCart(false)
+         toast({
+            title: 'New Product Added To Cart',
+            description: `"${product.title}" was added to the Cart`,
+         })
       } catch (error) {
          console.error({ error })
       }
