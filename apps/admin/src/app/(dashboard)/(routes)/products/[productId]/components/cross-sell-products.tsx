@@ -90,9 +90,7 @@ export function CrossSellProducts({
                </Card>
             ))}
          </div>
-         <Button className="my-3" disabled={selectedProducts.length === 0}>
-            Add Products as Cross Sell
-         </Button>
+
          {selectedProducts.length > 0 && (
             <div className="mt-6 p-4 bg-muted rounded-lg">
                <p className="text-sm text-muted-foreground">
