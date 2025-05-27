@@ -17,6 +17,24 @@ export function CrossSellProductsList({
    const { onAddToCart, onRemoveFromCart, countProductsInCart, fetchingCart } =
       useCartContext()
 
+   function priceBadge(product: Product) {
+      if (product?.discount > 0) {
+         const price = product?.price - product?.discount
+         const percentage = (product?.discount / product?.price) * 100
+         return (
+            <div className="flex gap-2 items-center">
+               <Badge className="flex gap-4" variant="destructive">
+                  <div className="line-through">${product?.price}</div>
+                  <div>%{percentage.toFixed(2)}</div>
+               </Badge>
+               <h2 className="text-xl">${price.toFixed(2)}</h2>
+            </div>
+         )
+      }
+
+      return <h2 className="text-xl">${product?.price}</h2>
+   }
+
    return (
       <div className="p-6">
          <h2 className="font-medium text-xl py-4">You might also like</h2>
@@ -35,9 +53,7 @@ export function CrossSellProductsList({
                         <h3 className="font-semibold text-lg mb-2">
                            {product.title}
                         </h3>
-                        <p className="text-xl font-bold mb-3">
-                           ${product.price}
-                        </p>
+                        {priceBadge(product)}
 
                         {countProductsInCart(product) ? (
                            <Badge className="my-2 text-[14px] absolute top-2 left-4">
