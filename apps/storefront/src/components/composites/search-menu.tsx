@@ -20,9 +20,9 @@ import {
    SelectValue,
 } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
+import { useSearchProducts } from '@/hooks/use-search-products'
 import { Search } from 'lucide-react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import React, { startTransition, useRef, useState } from 'react'
+import React, { useState } from 'react'
 
 export type SearchMenuProps = {
    categories: string[]
@@ -30,78 +30,15 @@ export type SearchMenuProps = {
 }
 
 export function SearchMenu({ categories, brands }: SearchMenuProps) {
-   const searchParams = useSearchParams()
+   const {
+      handleSearchForPriceRangeWithSlider,
+      handleSearchForPriceRangeWithText,
+      handleSearchWithMultiQueryParam,
+      handleSearchWithQueryParam,
+      priceRange,
+      searchParams,
+   } = useSearchProducts()
    const [open, setOpen] = useState(false)
-   const [priceRange, setPriceRange] = useState([
-      Number(searchParams.get('min_price') ?? '0'),
-      Number(searchParams.get('max_price') ?? '1000'),
-   ])
-   const sliderDebounce = useRef<NodeJS.Timeout>(null)
-   const router = useRouter()
-
-   function handleSearchWithMultiQueryParam(key: string, value: string) {
-      const newSearchParams = new URLSearchParams(searchParams.toString())
-      const currentMultiValues = newSearchParams.getAll(key)
-
-      if (currentMultiValues.includes(value)) {
-         newSearchParams.delete(key)
-         currentMultiValues
-            .filter((queryValue) => queryValue !== value)
-            .forEach((filteredValue) =>
-               newSearchParams.append(key, filteredValue)
-            )
-      } else {
-         newSearchParams.append(key, value)
-      }
-      startTransition(() => {
-         router.replace(`?${newSearchParams.toString()}`, {
-            scroll: false,
-         })
-      })
-   }
-
-   function handleSearchWithQueryParam(key: string, value: string) {
-      const newSearchParams = new URLSearchParams(searchParams.toString())
-      newSearchParams.set(key, value)
-      startTransition(() => {
-         router.replace(`?${newSearchParams.toString()}`, {
-            scroll: false,
-         })
-      })
-   }
-
-   function handleSearchForPriceRangeWithText(range: [number, number]) {
-      const newSearchParams = new URLSearchParams(searchParams.toString())
-      newSearchParams.set('min_price', String(range[0]))
-      newSearchParams.set('max_price', String(range[1]))
-
-      setPriceRange(range)
-
-      startTransition(() => {
-         router.replace(`?${newSearchParams.toString()}`, {
-            scroll: false,
-         })
-      })
-   }
-
-   function handleSearchForPriceRangeWithSlider(range: [number, number]) {
-      const newSearchParams = new URLSearchParams(searchParams.toString())
-      newSearchParams.set('min_price', String(range[0]))
-      newSearchParams.set('max_price', String(range[1]))
-      setPriceRange(range)
-
-      if (sliderDebounce.current) {
-         clearTimeout(sliderDebounce.current)
-      }
-
-      sliderDebounce.current = setTimeout(() => {
-         startTransition(() => {
-            router.replace(`?${newSearchParams.toString()}`, {
-               scroll: false,
-            })
-         })
-      }, 500)
-   }
 
    return (
       <Dialog open={open} onOpenChange={setOpen}>
