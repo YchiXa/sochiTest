@@ -1,47 +1,43 @@
+import { SearchSection } from '@/components/composites/search-section'
 import { ProductGrid, ProductSkeletonGrid } from '@/components/native/Product'
 import { Heading } from '@/components/native/heading'
 import { Separator } from '@/components/native/separator'
 import prisma from '@/lib/prisma'
 import { isVariableValid } from '@/lib/utils'
-
-import {
-   AvailableToggle,
-   BrandCombobox,
-   CategoriesCombobox,
-   SortBy,
-} from './components/options'
+import { formatOrderByParam } from '@/utils/format-order-by-param'
+import { formatSearchParams } from '@/utils/format-search-params'
 
 export default async function Products({ searchParams }) {
-   const { sort, isAvailable, brand, category, page = 1 } = searchParams ?? null
-
-   const orderBy = getOrderBy(sort)
-
-   const brands = await prisma.brand.findMany()
-   const categories = await prisma.category.findMany()
+   const { search, category, brand, maxPrice, minPrice, orderBy } =
+      formatSearchParams(searchParams)
+   const categories = (await prisma.category.findMany()).map(
+      (category) => category.title
+   )
+   const brands = (await prisma.brand.findMany()).map((brand) => brand.title)
    const products = await prisma.product.findMany({
-      where: {
-         isAvailable: isAvailable == 'true' || sort ? true : undefined,
-         brand: {
-            title: {
-               contains: brand,
-               mode: 'insensitive',
-            },
-         },
-         categories: {
-            some: {
-               title: {
-                  contains: category,
-                  mode: 'insensitive',
-               },
-            },
-         },
-      },
-      orderBy,
-      skip: (page - 1) * 12,
-      take: 12,
       include: {
          brand: true,
          categories: true,
+         crossSells: { select: { id: true } },
+      },
+      orderBy: formatOrderByParam(orderBy),
+      where: {
+         title: { contains: search, mode: 'insensitive' },
+         price: { gte: Number(minPrice), lte: Number(maxPrice) },
+         ...(category.length
+            ? {
+                 categories: {
+                    every: { title: { in: category, mode: 'insensitive' } },
+                 },
+              }
+            : {}),
+         ...(brand.length
+            ? {
+                 brand: {
+                    title: { in: brand, mode: 'insensitive' },
+                 },
+              }
+            : {}),
       },
    })
 
@@ -51,16 +47,14 @@ export default async function Products({ searchParams }) {
             title="Products"
             description="Below is a list of products you have in your cart."
          />
-         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-4">
-            <SortBy initialData={sort} />
-            <CategoriesCombobox
-               initialCategory={category}
-               categories={categories}
-            />
-            <BrandCombobox initialBrand={brand} brands={brands} />
-            <AvailableToggle initialData={isAvailable} />
-         </div>
+         <SearchSection brands={brands} categories={categories} />
          <Separator />
+         {products.length === 0 && (
+            <Heading
+               title="No Products Found"
+               description="We weren't able to retriev any products..."
+            />
+         )}
          {isVariableValid(products) ? (
             <ProductGrid products={products} />
          ) : (
