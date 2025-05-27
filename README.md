@@ -1,102 +1,105 @@
-![Screenshot](https://github.com/sesto-dev/next-prisma-tailwind-ecommerce/assets/45223699/00444538-a496-4f90-814f-7e57a580ad17)
+## Project
 
-<div align="center"><h3>Full-Stack E-Commerce Platform</h3><p>Built using Typescript with Next.js, Prisma ORM and TailwindCSS.</p></div>
-<div align="center">
-<a href="https://pasargad.vercel.app">Storefront</a> 
-<span> · </span>
-<a href="https://pardis.vercel.app">Admin Panel</a>
-</div>
+## Installing Project Dependencies
 
-## 👋 Introduction
-
-Welcome to the open-source Next.js E-Commerce Storefront with Admin Panel project! This project is built with TypeScript, Tailwind CSS, and Prisma, providing a powerful and flexible solution for building and managing your e-commerce website.
-
-## 🥂 Features
-
--  [x] [**Next.js 14**](https://nextjs.org) App Router and React Server Components.
--  [x] Custom dynamic `Sitemap.xml` generation.
--  [x] Admin dashboard with products, orders, and payments.
--  [x] File uploads using `next-cloudinary`.
--  [x] Authentication using `middleware.ts` and `httpOnly` cookies.
--  [x] Storefront with blog, products, and categories.
--  [x] Database-Stored blogs powered by **MDX** templates.
--  [x] Email verification and invoices using [react-email-tailwind-templates](https://github.com/sesto-dev/react-email-tailwind-templates).
--  [x] [**TailwindCSS**](https://tailwindcss.com/) for utility-first CSS.
--  [x] UI built with [**Radix**](https://www.radix-ui.com/) and stunning UI components, all thanks to [**shadcn/ui**](https://ui.shadcn.com/).
--  [x] Type-Validation with **Zod**.
--  [x] [**Next Metadata API**](https://nextjs.org/docs/api-reference/metadata) for SEO handling.
--  [ ] Comprehensive implementations for i18n.
-
-## 2️⃣ Why are there 2 apps in the app folder?
-
-This project is made up of 2 separate apps ( admin and storefront ) which should be deployed separately. If you are deploying with Vercel you should create 2 different apps.
-
-![image](https://github.com/Accretence/next-prisma-tailwind-ecommerce/assets/45223699/f5adc1ac-9dbb-46cb-bb6e-a8db15883348)
-
-Under the general tab there is a Root Directory option, for the admin app you should put in "apps/admin" and for the storefront app you should put in "apps/storefront".
-
-## 🔐 Authentication
-
-The authentication is handled using JWT tokens stored in cookies and verified inside the `middleware.ts` file. The middleware function takes in the HTTP request, reads the `token` cookie and if the JWT is successfully verified, it sets the `X-USER-ID` header with the userId as the value, otherwise the request is sent back with 401 status.
-
-## 👁‍🗨 Environment variables
-
-Environment variables are stored in `.env` files. By default the `.env.example` file is included in source control and contains
-settings and defaults to get the app running. Any secrets or local overrides of these values should be placed in a
-`.env` file, which is ignored from source control.
-
-Remember, never commit and store `.env` in the source control, just only `.env.example` without any data specified.
-
-You can [read more about environment variables here](https://nextjs.org/docs/basic-features/environment-variables).
-
-## 🏃‍♂️ Getting Started Locally
-
-Clone the repository.
-
-```bash
-git clone https://github.com/sesto-dev/next-prisma-tailwind-ecommerce
-```
-
-Navigate to each folder in the `apps` folder and and set the variables.
-
-```sh
-cp .env.example .env
-```
-
-Get all dependencies sorted.
-
-```sh
+### Storefront
+# Install dependencies in the storefront project folder
+cd apps/storefront
 bun install
-```
 
-Bring your database to life with pushing the database schema.
+### Admin
+# Install dependencies in the admin project folder
+cd apps/admin
+bun install
 
-```bash
+### Installing Supabase for Prisma
+# Install Supabase in the root folder
+bunx supabase init
+
+### Running Supabase Locally
+bunx supabase start
+
+### Getting DB_URL
+After starting Supabase locally, you will see the DB URL in the terminal. Copy it into your `.env` file:
+DB URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+
+### Getting JWT Secret
+After starting Supabase locally, you will see the JWT secret. Copy it into your `.env` file:
+JWT Secret: super-secret-jwt-token-with-at-least-32-characters-long
+
+### Seeding the Database
+#### Step 1 - Setting Up `package.json`
+Ensure your `package.json` has the following script for both the storefront and admin projects:
+"prisma": {
+  "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+}
+
+#### Step 2 - Installing Dependencies
+Install the dependencies needed to seed your database.
+
+# Install dependencies in the storefront project folder
+cd apps/storefront
+bun add typescript ts-node @types/node --dev
+
+# Install dependencies in the admin project folder
+cd apps/admin
+bun add typescript ts-node @types/node --dev
+
+### Step 3 - Seeding
+Run the command below in the admin project folder:
 bun run db:push
-```
+bun run db:seed
 
-```sh
+## Running the Project
+After installing and configuring all dependencies, run the `dev` command in each project's specific folder:
 bun run dev
-```
 
-## 🔑 Database
+Also, make sure your Supabase is running locally with:
+bunx supabase start
+You can view Supabase Studio locally at http://localhost:54323/project/default.
 
-Prisma ORM can use any PostgreSQL database. [Supabase is the easiest to work with.](https://www.prisma.io/docs/guides/database/supabase) Simply set `DATABASE_URL` in your `.env` file to work.
+## Technical Decisions
 
-### `bun run db`
+### Incorrect Usage of Environment Variable Keys
+In the file `user-auth-form.tsx` in the storefront project, there is a validation requiring the `JWT_SECRET_KEY` for login attempts. This is incorrect because the file is a client component. Environment variables can only be accessed in client components if they have the prefix `NEXT_PUBLIC`; otherwise, Next.js prevents verification due to potential security risks. To enable login, I had to remove this snippet.
 
-This project exposes a package.json script for accessing prisma via `bun run db:<command>`. You should always try to use this script when interacting with prisma locally.
+Verify Next.js documentation on environment variables here: https://nextjs.org/docs/pages/guides/environment-variables.
 
-### Making changes to the database schema
+I noticed that the PR introducing this issue was merged on 01/01/2025, so I believe no one has caught this issue yet. PR link: github.com/sesto-dev/next-prisma-tailwind-ecommerce/commit/3f21c757be67f1e4512bf17d013db3f9007068b5.
 
-Make changes to your database by modifying `prisma/schema.prisma`.
+### Part 1: Rebuilding the Product Page Filter
+- The state is controlled using query parameters in the URL, allowing users to share URLs and persist searches.
+- Filtering is done server-side using Prisma to handle large datasets efficiently, avoiding expensive client-side computations.
+- A debounce is added to the price slider to prevent unnecessary requests.
+- A modal was created for searching products directly on the homepage.
+- When mutating URL query parameters, the function `startTransition` from React is used to mark updates as non-urgent, ensuring a smooth and responsive UI.
+- The function `formatSearchParams` translates URL parameters into a format the application can process safely. Utility functions such as `parseQueryParamToString`, `parseQueryParamToArray`, and `parseQueryParamToDate` ensure that the Prisma query does not receive unknown parameters that could break the application.
 
-## 🛸 How to Deploy the Project
+### Part 2: Admin Reporting Page
+- A new `/reports` route was created.
+- Only owners with valid tokens can access this route due to middleware configuration.
+- Searching on this page is server-side to handle large datasets more efficiently.
+- Product names and counts are retrieved and sorted using Prisma functions like `distinct` queries and `groupBy` with count summation, avoiding inefficient client-side JavaScript operations.
 
-Follow the deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+### Part 3: Extending the Prisma DB Model & Enhancing Cross-Sell Functionality
+- Cross-sell functionality is managed using a many-to-many relationship.
+- A new section was added to the Product Form in the Admin project for configuring cross-sell options.
+- The `CartContext` was refactored to allow reuse in both the product screen and the cart page for adding/removing items.
+- The original toast notifications from `react-hot-toast` were replaced with ShadCN’s toast version for improved functionality.
 
-## 📄 License
+### Preview
 
-This project is MIT-licensed and is free to use and modify for your own projects. Check the [LICENSE](./LICENSE) file for details.
+#### Search Page
+![https://ibb.co/W4jL0TKM](https://ibb.co/W4jL0TKM)
 
-Created by [Amirhossein Mohammadi](https://github.com/sesto-dev).
+#### Admin Reports Page
+![https://ibb.co/mC9fKMBs](https://ibb.co/mC9fKMBs)
+
+#### Admin Cross-Sell New Form
+![https://ibb.co/YFrWj2w8](https://ibb.co/YFrWj2w8)
+
+#### Cross-Sell in Product Page
+![https://ibb.co/RGyPYc8S](https://ibb.co/RGyPYc8S)
+
+#### Cross-Sell in Cart Page
+![https://ibb.co/qLrRfp0v](https://ibb.co/qLrRfp0v)
