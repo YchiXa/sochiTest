@@ -4,20 +4,28 @@
 
 ### Storefront
 # Install dependencies in the storefront project folder
+```
 cd apps/storefront
 bun install
+```
 
 ### Admin
 # Install dependencies in the admin project folder
+```
 cd apps/admin
 bun install
+```
 
 ### Installing Supabase for Prisma
 # Install Supabase in the root folder
+```
 bunx supabase init
+```
 
 ### Running Supabase Locally
+```
 bunx supabase start
+```
 
 ### Getting DB_URL
 After starting Supabase locally, you will see the DB URL in the terminal. Copy it into your `.env` file:
@@ -30,29 +38,39 @@ JWT Secret: super-secret-jwt-token-with-at-least-32-characters-long
 ### Seeding the Database
 #### Step 1 - Setting Up `package.json`
 Ensure your `package.json` has the following script for both the storefront and admin projects:
+```json
 "prisma": {
   "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
 }
+```
 
 #### Step 2 - Installing Dependencies
 Install the dependencies needed to seed your database.
 
 # Install dependencies in the storefront project folder
+```
 cd apps/storefront
 bun add typescript ts-node @types/node --dev
+```
 
 # Install dependencies in the admin project folder
+```
 cd apps/admin
 bun add typescript ts-node @types/node --dev
+```
 
 ### Step 3 - Seeding
 Run the command below in the admin project folder:
+```
 bun run db:push
 bun run db:seed
+```
 
 ## Running the Project
 After installing and configuring all dependencies, run the `dev` command in each project's specific folder:
+```
 bun run dev
+```
 
 Also, make sure your Supabase is running locally with:
 bunx supabase start
@@ -90,16 +108,17 @@ I noticed that the PR introducing this issue was merged on 01/01/2025, so I beli
 ### Preview
 
 #### Search Page
-<img src="https://ibb.co/W4jL0TKM" alt="Search Page Preview >
+<img src="https://i.ibb.co/7dLqQ9yZ/Screen-Shot-2025-05-27-at-17-20-58.png" alt="Search Page Preview" >
 
 #### Admin Reports Page
-<img src="https://ibb.co/mC9fKMBs" alt="Admin Reports Page">
+<img src="https://i.ibb.co/27vGrf62/Screen-Shot-2025-05-27-at-17-21-54.png" alt="Admin Reports Page">
 
 #### Admin Cross-Sell New Form
-<img src="https://ibb.co/YFrWj2w8" alt="Admin Cross-Sell New Form">
+<img src="https://i.ibb.co/yc3Rs075/Screen-Shot-2025-05-27-at-17-22-09.png" alt="Admin Cross-Sell New Form">
 
 #### Cross-Sell in Product Page
-<img src="https://ibb.co/RGyPYc8S" alt="Cross-Sell in Product Page">
+<img src="https://i.ibb.co/tMYkxsgQ/Screen-Shot-2025-05-27-at-18-00-24.png" alt="Cross-Sell in Product Page">
 
 #### Cross-Sell in Cart Page
-<img src="https://ibb.co/qLrRfp0v" alt="Cross-Sell in Cart Page>
+
+<img src="https://i.ibb.co/kV105XZy/Screen-Shot-2025-05-27-at-17-14-59.png" alt="Cross-Sell in Product Page">
