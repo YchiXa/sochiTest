@@ -1,3 +1,4 @@
+import { getProducts } from '@/app/actions/get-products'
 import {
    BlogPostGrid,
    BlogPostSkeletonGrid,
@@ -9,43 +10,13 @@ import { Separator } from '@/components/native/separator'
 import prisma from '@/lib/prisma'
 import { isVariableValid } from '@/lib/utils'
 import { SearchParams } from '@/types/search-params'
-import { formatOrderByParam } from '@/utils/format-order-by-param'
-import { formatSearchParams } from '@/utils/format-search-params'
 
 type IndexPageProps = {
    searchParams: SearchParams
 }
 
 export default async function Index({ searchParams }: IndexPageProps) {
-   const { search, category, brand, maxPrice, minPrice, orderBy } =
-      formatSearchParams(searchParams)
-
-   const products = await prisma.product.findMany({
-      include: {
-         brand: true,
-         categories: true,
-         crossSells: { select: { id: true } },
-      },
-      orderBy: formatOrderByParam(orderBy),
-      where: {
-         title: { contains: search, mode: 'insensitive' },
-         price: { gte: Number(minPrice), lte: Number(maxPrice) },
-         ...(category.length
-            ? {
-                 categories: {
-                    every: { title: { in: category, mode: 'insensitive' } },
-                 },
-              }
-            : {}),
-         ...(brand.length
-            ? {
-                 brand: {
-                    title: { in: brand, mode: 'insensitive' },
-                 },
-              }
-            : {}),
-      },
-   })
+   const products = await getProducts(searchParams)
 
    const blogs = await prisma.blog.findMany({
       include: { author: true },
