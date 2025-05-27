@@ -16,6 +16,7 @@ const CartContext = createContext({
    dispatchCart: (object) => {},
    onAddToCart: (product: Product) => {},
    onRemoveFromCart: (product: Product) => {},
+   countProductsInCart: (product: Product) => 0,
 })
 
 export const useCartContext = () => {
@@ -33,6 +34,13 @@ export const CartContextProvider = ({ children }) => {
    const dispatchCart = async (cart) => {
       setCart(cart)
       writeLocalCart(cart)
+   }
+
+   function countProductsInCart(product: Product) {
+      return (
+         cart?.items?.find((cartItem) => cartItem.productId === product.id)
+            ?.count ?? 0
+      )
    }
 
    const refreshCart = async () => {
@@ -196,6 +204,7 @@ export const CartContextProvider = ({ children }) => {
             fetchingCart,
             onAddToCart,
             onRemoveFromCart,
+            countProductsInCart,
          }}
       >
          {children}

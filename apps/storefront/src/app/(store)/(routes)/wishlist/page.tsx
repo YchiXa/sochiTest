@@ -2,7 +2,8 @@
 
 import { CartGrid } from '@/app/(store)/(routes)/cart/components/grid'
 import { useAuthenticated } from '@/hooks/useAuthentication'
-import { isVariableValid, validateBoolean } from '@/lib/utils'
+import { isVariableValid } from '@/lib/utils'
+import { CartContextProvider } from '@/state/Cart'
 import { useUserContext } from '@/state/User'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -37,8 +38,8 @@ export default function User({}) {
    }, [authenticated])
 
    return (
-      <>
+      <CartContextProvider>
          <CartGrid />
-      </>
+      </CartContextProvider>
    )
 }

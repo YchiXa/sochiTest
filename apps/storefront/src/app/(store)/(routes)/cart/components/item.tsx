@@ -92,6 +92,24 @@ export const Item = ({ cartItem }: ItemProps) => {
       return <h2>${product?.price}</h2>
    }
 
+   function crossSellPrice(product: Product) {
+      if (product?.discount > 0) {
+         const price = product?.price - product?.discount
+         const percentage = (product?.discount / product?.price) * 100
+         return (
+            <div className="flex flex-col items-start gap-2">
+               <Badge className="flex gap-4" variant="destructive">
+                  <div className="line-through">${product?.price}</div>
+                  <div>%{percentage.toFixed(2)}</div>
+               </Badge>
+               <h2 className="">${price.toFixed(2)}</h2>
+            </div>
+         )
+      }
+
+      return <h2>${product?.price}</h2>
+   }
+
    return (
       <Card className="p-4">
          <Card>
@@ -144,7 +162,7 @@ export const Item = ({ cartItem }: ItemProps) => {
                      {product.crossSells.map((crossSellProduct) => (
                         <div
                            key={crossSellProduct.id}
-                           className="border rounded-lg p-3 space-y-2"
+                           className="border rounded-lg p-3 space-y-2 relative"
                         >
                            <div className="relative h-20 w-full">
                               <Link href={`/products/${crossSellProduct.id}`}>
@@ -174,7 +192,28 @@ export const Item = ({ cartItem }: ItemProps) => {
                                     {crossSellProduct.title}
                                  </h4>
                               </Link>
-                              {showPrice(crossSellProduct)}
+                              {crossSellPrice(crossSellProduct)}
+                              <div className="flex items-center gap-x-1">
+                                 <Button
+                                    size="sm"
+                                    onClick={() =>
+                                       onAddToCart(crossSellProduct)
+                                    }
+                                 >
+                                    Add to Cart
+                                 </Button>
+
+                                 <Button
+                                    size="sm"
+                                    className="p-4"
+                                    variant="outline"
+                                    onClick={() =>
+                                       onRemoveFromCart(crossSellProduct)
+                                    }
+                                 >
+                                    Remove from Cart
+                                 </Button>
+                              </div>
                            </div>
                         </div>
                      ))}

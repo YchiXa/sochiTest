@@ -14,15 +14,8 @@ export type CrossSellProductsListProps = {
 export function CrossSellProductsList({
    products,
 }: CrossSellProductsListProps) {
-   const { onAddToCart, onRemoveFromCart, fetchingCart, cart } =
+   const { onAddToCart, onRemoveFromCart, countProductsInCart, fetchingCart } =
       useCartContext()
-
-   function countProductsInCart(product: Product) {
-      return (
-         cart?.items?.find((cartItem) => cartItem.productId === product.id)
-            ?.count ?? 0
-      )
-   }
 
    return (
       <div className="p-6">
