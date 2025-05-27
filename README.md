@@ -3,21 +3,21 @@
 ## Installing Project Dependencies
 
 ### Storefront
-# Install dependencies in the storefront project folder
+#### Install dependencies in the storefront project folder
 ```
 cd apps/storefront
 bun install
 ```
 
 ### Admin
-# Install dependencies in the admin project folder
+#### Install dependencies in the admin project folder
 ```
 cd apps/admin
 bun install
 ```
 
 ### Installing Supabase for Prisma
-# Install Supabase in the root folder
+#### Install Supabase in the root folder
 ```
 bunx supabase init
 ```
@@ -47,26 +47,26 @@ Ensure your `package.json` has the following script for both the storefront and 
 #### Step 2 - Installing Dependencies
 Install the dependencies needed to seed your database.
 
-# Install dependencies in the storefront project folder
+#### Install dependencies in the storefront project folder
 ```
 cd apps/storefront
 bun add typescript ts-node @types/node --dev
 ```
 
-# Install dependencies in the admin project folder
+#### Install dependencies in the admin project folder
 ```
 cd apps/admin
 bun add typescript ts-node @types/node --dev
 ```
 
-### Step 3 - Seeding
+#### Step 3 - Seeding
 Run the command below in the admin project folder:
 ```
 bun run db:push
 bun run db:seed
 ```
 
-## Running the Project
+#### Running the Project
 After installing and configuring all dependencies, run the `dev` command in each project's specific folder:
 ```
 bun run dev
