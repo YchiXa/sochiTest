@@ -90,16 +90,16 @@ I noticed that the PR introducing this issue was merged on 01/01/2025, so I beli
 ### Preview
 
 #### Search Page
-![https://ibb.co/W4jL0TKM](https://ibb.co/W4jL0TKM)
+<img src="https://ibb.co/W4jL0TKM" alt="Search Page Preview >
 
 #### Admin Reports Page
-![https://ibb.co/mC9fKMBs](https://ibb.co/mC9fKMBs)
+<img src="https://ibb.co/mC9fKMBs" alt="Admin Reports Page">
 
 #### Admin Cross-Sell New Form
-![https://ibb.co/YFrWj2w8](https://ibb.co/YFrWj2w8)
+<img src="https://ibb.co/YFrWj2w8" alt="Admin Cross-Sell New Form">
 
 #### Cross-Sell in Product Page
-![https://ibb.co/RGyPYc8S](https://ibb.co/RGyPYc8S)
+<img src="https://ibb.co/RGyPYc8S" alt="Cross-Sell in Product Page">
 
 #### Cross-Sell in Cart Page
-![https://ibb.co/qLrRfp0v](https://ibb.co/qLrRfp0v)
+<img src="https://ibb.co/qLrRfp0v" alt="Cross-Sell in Cart Page>
