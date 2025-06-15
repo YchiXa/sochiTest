@@ -10,12 +10,14 @@ export function useAuthenticated() {
       try {
          if (typeof window !== 'undefined' && window.localStorage) {
             const cookies = document.cookie.split(';')
-            const loggedInCookie =
-               cookies
-                  .find((cookie) => cookie.startsWith('logged-in'))
-                  .split('=')[1] === 'true'
+            const cookieString = cookies.find((cookie) =>
+               cookie.trim().startsWith('logged-in')
+            )
+            const loggedInCookie = cookieString
+               ? cookieString.split('=')[1] === 'true'
+               : false
 
-            setAuthenticated(loggedInCookie ?? false)
+            setAuthenticated(loggedInCookie)
          }
       } catch (error) {
          console.error({ error })
