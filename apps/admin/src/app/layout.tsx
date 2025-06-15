@@ -18,13 +18,13 @@ export default async function RootLayout({
    children: React.ReactNode
 }) {
    return (
-      <html lang="ru">
-         <body className={inter.className}>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-               <ToastProvider />
-               <ModalProvider />
-               {children}
-            </ThemeProvider>
+      <html lang="ru" suppressHydrationWarning>
+         <body className={inter.className} suppressHydrationWarning>
+           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <ToastProvider />
+              <ModalProvider />
+              {children}
+           </ThemeProvider>
          </body>
       </html>
    )
