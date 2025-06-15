@@ -18,7 +18,7 @@ export type UserColumn = {
 export const columns: ColumnDef<UserColumn>[] = [
    {
       accessorKey: 'name',
-      header: 'Name',
+      header: 'Имя',
       cell: ({ row, cell }) => (
          <Link href={`/users/${row.original.id}`}>
             <p>{cell?.getValue()?.toString()}</p>
@@ -31,16 +31,16 @@ export const columns: ColumnDef<UserColumn>[] = [
    },
    {
       accessorKey: 'phone',
-      header: 'Phone',
+      header: 'Телефон',
    },
    {
       accessorKey: 'orders',
-      header: 'Order #',
+      header: 'Заказы',
       cell: ({ row, cell }) => (
          <Link href={`/orders?userId=${row.original.id}`}>
             <Badge className="items-center flex gap-1 w-min">
                <LinkIcon className="h-3" />
-               <p className="shrink-0">{cell.getValue().toString()} Orders</p>
+               <p className="shrink-0">{cell.getValue().toString()} заказов</p>
             </Badge>
          </Link>
       ),
@@ -51,7 +51,7 @@ export const columns: ColumnDef<UserColumn>[] = [
          <Link href={`/users/${row.original.id}`}>
             <Badge className="items-center flex gap-1 w-min">
                <EditIcon className="h-3 p-0" />
-               <p>Edit</p>
+               <p>Редактировать</p>
             </Badge>
          </Link>
       ),

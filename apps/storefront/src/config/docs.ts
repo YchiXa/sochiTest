@@ -8,7 +8,7 @@ interface DocsConfig {
 export const docsConfig: DocsConfig = {
    mainNav: [
       {
-         title: 'Documentation',
+         title: 'Документация',
          href: '/docs',
       },
 
@@ -20,27 +20,27 @@ export const docsConfig: DocsConfig = {
    ],
    sidebarNav: [
       {
-         title: 'Products',
+         title: 'Товары',
          href: '/products',
       },
       {
-         title: 'Blog',
+         title: 'Блог',
          href: '/blog',
       },
       {
-         title: 'Orders',
+         title: 'Заказы',
          href: '/profile/orders',
       },
       {
-         title: 'Payments',
+         title: 'Платежи',
          href: '/profile/payments',
       },
       {
-         title: 'Contact',
+         title: 'Контакты',
          href: '/contact',
       },
       {
-         title: 'About',
+         title: 'О нас',
          href: '/about',
       },
    ],

@@ -19,18 +19,18 @@ export function UserCombobox({ initialValue }) {
 
    const categories = [
       {
-         title: 'Addresses',
-         description: 'Visit your addresses.',
+         title: 'Адреса',
+         description: 'Посетите ваши адреса.',
          value: '/profile/addresses',
       },
       {
-         title: 'Edit Profile',
-         description: 'Visit your orders.',
+         title: 'Редактировать профиль',
+         description: 'Посетите ваши заказы.',
          value: '/profile/edit',
       },
       {
-         title: 'Orders',
-         description: 'Visit your orders.',
+         title: 'Заказы',
+         description: 'Посетите ваши заказы.',
          value: '/profile/orders',
       },
    ]

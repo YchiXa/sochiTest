@@ -30,27 +30,27 @@ export type ProductColumn = {
 export const columns: ColumnDef<ProductColumn>[] = [
    {
       accessorKey: 'title',
-      header: 'Title',
+      header: 'Название',
    },
    {
       accessorKey: 'price',
-      header: 'Price',
+      header: 'Цена',
    },
    {
       accessorKey: 'discount',
-      header: 'Discount',
+      header: 'Скидка',
    },
    {
       accessorKey: 'category',
-      header: 'Category',
+      header: 'Категория',
    },
    {
       accessorKey: 'sales',
-      header: 'Sales #',
+      header: 'Продажи',
    },
    {
       accessorKey: 'isAvailable',
-      header: 'Availability',
+      header: 'В наличии',
       cell: (props) => (props.cell.getValue() ? <CheckIcon /> : <XIcon />),
    },
    {

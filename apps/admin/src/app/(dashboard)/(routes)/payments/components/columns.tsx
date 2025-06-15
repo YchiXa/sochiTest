@@ -18,22 +18,24 @@ export type PaymentColumn = {
 export const columns: ColumnDef<PaymentColumn>[] = [
    {
       accessorKey: 'number',
-      header: 'Payment Number',
-   },
-   {
-      accessorKey: 'date',
-      header: 'Date',
-   },
-   {
-      accessorKey: 'payable',
-      header: 'Payable',
+      header: 'Номер платежа',
    },
    {
       accessorKey: 'isSuccessful',
-      header: 'Successful',
-      cell: (props) => {
-         return props.cell.getValue() ? <CheckIcon /> : <XIcon />
-      },
+      header: 'Статус',
+      cell: (props) => (props.cell.getValue() ? <CheckIcon /> : <XIcon />),
+   },
+   {
+      accessorKey: 'payable',
+      header: 'Сумма',
+   },
+   {
+      accessorKey: 'status',
+      header: 'Состояние',
+   },
+   {
+      accessorKey: 'createdAt',
+      header: 'Дата',
    },
    {
       id: 'actions',

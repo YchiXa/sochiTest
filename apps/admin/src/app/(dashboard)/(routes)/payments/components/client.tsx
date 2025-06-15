@@ -14,8 +14,8 @@ export const PaymentClient: React.FC<PaymentClientProps> = ({ data }) => {
    return (
       <div className="block space-y-4 my-6">
          <Heading
-            title={`Payments (${data.length})`}
-            description="Manage orders for your store"
+            title={`Платежи (${data.length})`}
+            description="Управляйте заказами вашего магазина"
          />
          <Separator />
          <DataTable searchKey="products" columns={columns} data={data} />

@@ -35,7 +35,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
                <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
+                  Или продолжить с помощью
                </span>
             </div>
          </div>
@@ -81,7 +81,7 @@ function ChangeMethodButton({ isLoading }) {
          ) : (
             <SmartphoneIcon className="mr-2 h-4" />
          )}
-         Phone Number
+         Номер телефона
       </Button>
    )
 }
@@ -166,11 +166,11 @@ function TryComponents({ isLoading, setIsLoading, setFetchedOTP }) {
                   className="text-sm font-light text-foreground/60"
                   htmlFor="email"
                >
-                  Phone
+                  Телефон
                </Label>
                <Input
                   id="phone"
-                  placeholder="+989123456789"
+                  placeholder="+7 (999) 123-45-67"
                   type="phone"
                   autoCapitalize="none"
                   autoComplete="phone"
@@ -181,7 +181,7 @@ function TryComponents({ isLoading, setIsLoading, setFetchedOTP }) {
                />
                {isVariableValid(phone) && !isIranianPhoneNumberValid(phone) && (
                   <p className="mt-2 text-sm text-red-700">
-                     Phone Number is not valid.
+                     Номер телефона недействителен.
                   </p>
                )}
             </div>
@@ -190,7 +190,7 @@ function TryComponents({ isLoading, setIsLoading, setFetchedOTP }) {
                disabled={isLoading || !isIranianPhoneNumberValid(phone)}
             >
                {isLoading && <Loader className="mr-2 h-4 animate-spin" />}
-               Login with Phone
+               Войти по телефону
             </Button>
          </>
       )
@@ -202,11 +202,11 @@ function TryComponents({ isLoading, setIsLoading, setFetchedOTP }) {
                className="text-sm font-light text-foreground/60"
                htmlFor="email"
             >
-               Email
+               Электронная почта
             </Label>
             <Input
                id="email"
-               placeholder="name@example.com"
+               placeholder="example@mail.com"
                type="email"
                autoCapitalize="none"
                autoComplete="email"
@@ -221,7 +221,7 @@ function TryComponents({ isLoading, setIsLoading, setFetchedOTP }) {
             disabled={isLoading || !isEmailValid(email)}
          >
             {isLoading && <Loader className="mr-2 h-4 animate-spin" />}
-            Login with Email
+            Войти через Email
          </Button>
       </>
    )
@@ -282,10 +282,10 @@ function VerifyComponents({ isLoading, setIsLoading }) {
                className="text-sm font-light text-foreground/60"
                htmlFor="email"
             >
-               One-Time Password
+               Код подтверждения
             </Label>
             <Input
-               placeholder="12345"
+               placeholder="Введите код из письма"
                disabled={isLoading}
                onChange={handleOTPChange}
                required
@@ -293,7 +293,7 @@ function VerifyComponents({ isLoading, setIsLoading }) {
          </div>
          <Button onClick={onVerifyOTP} disabled={isLoading}>
             {isLoading && <Loader className="mr-2 h-4 animate-spin" />}
-            Submit
+            Подтвердить
          </Button>
       </>
    )

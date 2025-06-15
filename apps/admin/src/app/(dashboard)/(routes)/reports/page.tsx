@@ -32,17 +32,17 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
    return (
       <div className="container mx-auto p-6 space-y-6">
          <header className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Reports Overview</h1>
+            <h1 className="text-3xl font-bold">Обзор отчетов</h1>
          </header>
 
          <Card>
             <CardHeader>
                <CardTitle className="flex items-center gap-2">
                   <FilterIcon className="h-5 w-5" />
-                  Filter Options
+                  Параметры фильтрации
                </CardTitle>
                <CardDescription>
-                  Filter reports by date range, categories, and brand
+                  Фильтровать отчеты по диапазону дат, категориям и брендам
                </CardDescription>
             </CardHeader>
             <CardContent>
@@ -56,15 +56,15 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
                <CardHeader>
-                  <CardTitle>Orders Report</CardTitle>
+                  <CardTitle>Отчет по заказам</CardTitle>
                   <CardDescription>
-                     Summary of orders grouped by date
+                     Сводка заказов, сгруппированных по дате
                   </CardDescription>
                </CardHeader>
                <CardContent>
                   <div className="space-y-4">
                      {Object.entries(paidOrdersGroupedByDate).length === 0 && (
-                        <strong>No Orders Found</strong>
+                        <strong>Заказы не найдены</strong>
                      )}
                      {Object.entries(paidOrdersGroupedByDate).map(
                         ([date, orders]) => (
@@ -76,7 +76,7 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
                                  {new Date(date).toDateString()}
                               </span>
                               <span className="text-sm text-muted-foreground">
-                                 {orders.length} orders
+                                 {orders.length} заказов
                               </span>
                               <span className="font-semibold">
                                  $
@@ -94,20 +94,20 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
 
             <Card>
                <CardHeader>
-                  <CardTitle>Top Selling Products</CardTitle>
+                  <CardTitle>Самые продаваемые товары</CardTitle>
                   <CardDescription>
-                     Most-sold products in the selected period
+                     Самые продаваемые товары за выбранный период
                   </CardDescription>
                </CardHeader>
                <CardContent>
                   <Table>
                      <TableHeader>
                         <TableRow>
-                           <TableHead>Product</TableHead>
-                           <TableHead>Category</TableHead>
-                           <TableHead>Brand</TableHead>
+                           <TableHead>Товар</TableHead>
+                           <TableHead>Категория</TableHead>
+                           <TableHead>Бренд</TableHead>
                            <TableHead className="text-right">
-                              Units Sold
+                              Продано единиц
                            </TableHead>
                         </TableRow>
                      </TableHeader>

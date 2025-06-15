@@ -51,10 +51,14 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
    const [open, setOpen] = useState(false)
    const [loading, setLoading] = useState(false)
 
-   const title = initialData ? 'Edit category' : 'Create category'
-   const description = initialData ? 'Edit a category.' : 'Add a new category'
-   const toastMessage = initialData ? 'Category updated.' : 'Category created.'
-   const action = initialData ? 'Save changes' : 'Create'
+   const title = initialData ? 'Редактировать категорию' : 'Создать категорию'
+   const description = initialData
+      ? 'Редактирование категории.'
+      : 'Добавить новую категорию'
+   const toastMessage = initialData
+      ? 'Категория обновлена.'
+      : 'Категория создана.'
+   const action = initialData ? 'Сохранить изменения' : 'Создать'
 
    const form = useForm<CategoryFormValues>({
       resolver: zodResolver(formSchema),
@@ -84,7 +88,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
          router.push(`/categories`)
          toast.success(toastMessage)
       } catch (error: any) {
-         toast.error('Something went wrong.')
+         toast.error('Что-то пошло не так.')
       } finally {
          setLoading(false)
       }
@@ -101,11 +105,9 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
 
          router.refresh()
          router.push(`/categories`)
-         toast.success('Category deleted.')
+         toast.success('Категория удалена.')
       } catch (error: any) {
-         toast.error(
-            'Make sure you removed all products using this category first.'
-         )
+         toast.error('Убедитесь, что вы удалили все продукты этой категории.')
       } finally {
          setLoading(false)
          setOpen(false)
@@ -145,11 +147,11 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
                      name="title"
                      render={({ field }) => (
                         <FormItem>
-                           <FormLabel>Name</FormLabel>
+                           <FormLabel>Название</FormLabel>
                            <FormControl>
                               <Input
                                  disabled={loading}
-                                 placeholder="Category name"
+                                 placeholder="Название категории"
                                  {...field}
                               />
                            </FormControl>
@@ -162,7 +164,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
                      name="description"
                      render={({ field }) => (
                         <FormItem>
-                           <FormLabel>Banner</FormLabel>
+                           <FormLabel>Баннер</FormLabel>
                            <Select
                               disabled={loading}
                               onValueChange={field.onChange}
@@ -173,7 +175,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
                                  <SelectTrigger>
                                     <SelectValue
                                        defaultValue={field.value}
-                                       placeholder="Select a banner"
+                                       placeholder="Выберите баннер"
                                     />
                                  </SelectTrigger>
                               </FormControl>

@@ -53,11 +53,11 @@ export function SearchSection({ categories, brands }: SearcSectionProps) {
          <div className="grid gap-6">
             <div className="space-y-2">
                <Label htmlFor="search" className="text-sm font-medium">
-                  Search
+                  Поиск
                </Label>
                <Input
                   id="search"
-                  placeholder="Search products..."
+                  placeholder="Поиск товаров..."
                   className="h-11"
                   onChange={(e) =>
                      handleSearchWithQueryParam('search', e.target.value)
@@ -67,7 +67,7 @@ export function SearchSection({ categories, brands }: SearcSectionProps) {
             </div>
 
             <div className="space-y-2">
-               <Label className="text-sm font-medium">Order by</Label>
+               <Label className="text-sm font-medium">Сортировка</Label>
                <Select
                   defaultValue={searchParams.get('order_by') || undefined}
                   onValueChange={(value) =>
@@ -75,20 +75,16 @@ export function SearchSection({ categories, brands }: SearcSectionProps) {
                   }
                >
                   <SelectTrigger className="h-11">
-                     <SelectValue placeholder="Choose sorting option" />
+                     <SelectValue placeholder="Выберите сортировку" />
                   </SelectTrigger>
                   <SelectContent>
-                     <SelectItem value="price-desc">
-                        Most expensive products
-                     </SelectItem>
-                     <SelectItem value="price-asc">
-                        Cheapest products
-                     </SelectItem>
+                     <SelectItem value="price-desc">Сначала дорогие</SelectItem>
+                     <SelectItem value="price-asc">Сначала дешевые</SelectItem>
                      <SelectItem value="title-asc">
-                        Title in ascending order (A-Z)
+                        По названию (А-Я)
                      </SelectItem>
                      <SelectItem value="title-desc">
-                        Title in descending order (Z-A)
+                        По названию (Я-А)
                      </SelectItem>
                   </SelectContent>
                </Select>
@@ -115,9 +111,9 @@ export function SearchSection({ categories, brands }: SearcSectionProps) {
                      </PopoverTrigger>
                      <PopoverContent className="w-[300px] p-0">
                         <Command>
-                           <CommandInput placeholder="Search categories..." />
+                           <CommandInput placeholder="Поиск категорий..." />
                            <CommandList>
-                              <CommandEmpty>No categories found.</CommandEmpty>
+                              <CommandEmpty>Категории не найдены.</CommandEmpty>
                               <CommandGroup>
                                  {categories.map((category) => (
                                     <CommandItem
@@ -161,16 +157,16 @@ export function SearchSection({ categories, brands }: SearcSectionProps) {
                            className="h-11 justify-between"
                         >
                            {selectedBrands.length > 0
-                              ? `${selectedBrands.length} selected`
-                              : 'Select brands'}
+                              ? `Выбрано: ${selectedBrands.length}`
+                              : 'Выберите бренды'}
                            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                      </PopoverTrigger>
                      <PopoverContent className="w-[300px] p-0">
                         <Command>
-                           <CommandInput placeholder="Search brands..." />
+                           <CommandInput placeholder="Поиск брендов..." />
                            <CommandList>
-                              <CommandEmpty>No brands found.</CommandEmpty>
+                              <CommandEmpty>Бренды не найдены.</CommandEmpty>
                               <CommandGroup>
                                  {brands.map((brand) => (
                                     <CommandItem
@@ -203,7 +199,7 @@ export function SearchSection({ categories, brands }: SearcSectionProps) {
             </div>
 
             <div className="space-y-4">
-               <Label className="text-sm font-medium">Price Range</Label>
+               <Label className="text-sm font-medium">Ценовой диапазон</Label>
                <div className="px-2">
                   <Slider
                      defaultValue={[0, 1000]}
@@ -220,7 +216,7 @@ export function SearchSection({ categories, brands }: SearcSectionProps) {
                         htmlFor="min-price"
                         className="text-xs text-muted-foreground"
                      >
-                        Min Price
+                        Мин. цена
                      </Label>
                      <div className="relative">
                         <Input
@@ -242,7 +238,7 @@ export function SearchSection({ categories, brands }: SearcSectionProps) {
                         htmlFor="max-price"
                         className="text-xs text-muted-foreground"
                      >
-                        Max Price
+                        Макс. цена
                      </Label>
                      <div className="relative">
                         <Input

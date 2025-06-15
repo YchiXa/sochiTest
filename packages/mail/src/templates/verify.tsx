@@ -1,8 +1,8 @@
 import {
    Body,
    Button,
-   Container,
    Column,
+   Container,
    Head,
    Heading,
    Hr,
@@ -26,7 +26,7 @@ export const VercelInviteUserEmail = ({
    name = 'My Project',
    code = ``,
 }: VercelInviteUserEmailProps) => {
-   const previewText = `Verify your email.`
+   const previewText = `Подтвердите ваш email.`
 
    return (
       <Html>
@@ -38,12 +38,13 @@ export const VercelInviteUserEmail = ({
                   <Section className="mt-[32px]">{name}</Section>
                   <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0"></Heading>
                   <Text className="text-black text-[14px] leading-[24px]">
-                     Hello! Welcome to {name}!
+                     Здравствуйте! Добро пожаловать в {name}!
                   </Text>
                   <Text className="text-black text-[14px] leading-[24px]">
-                     There’s one quick step you need to complete before gaining
-                     full access to your account. Let’s make sure this is the
-                     right address we should use for your new account.
+                     Остался один быстрый шаг, который вам нужно выполнить,
+                     прежде чем получить полный доступ к вашей учетной записи.
+                     Давайте убедимся, что это правильный адрес, который мы
+                     должны использовать для вашей новой учетной записи.
                   </Text>
 
                   <Text className="text-black text-[14px] leading-[24px]">
@@ -51,9 +52,9 @@ export const VercelInviteUserEmail = ({
                   </Text>
                   <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
                   <Text className="text-[#666666] text-[12px] leading-[24px]">
-                     Don't like these emails?{' '}
+                     Не хотите получать эти письма?{' '}
                      <Link href={process.env.NEXT_PUBLIC_URL + '/unsubscribe'}>
-                        Unsubscribe
+                        Отписаться
                      </Link>
                      .
                   </Text>

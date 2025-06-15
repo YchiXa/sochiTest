@@ -89,7 +89,7 @@ export function ReportsFilter({ categories, brands }: ReportsFilterProps) {
       <>
          <div className="flex flex-col lg:flex-row gap-3 lg:gap-4">
             <div className="space-y-2 w-full lg:flex-1">
-               <Label>Start Date</Label>
+               <Label>Начальная дата</Label>
                <div className="flex flex-grow gap-2">
                   <div className="relative w-full">
                      <DatePicker
@@ -105,7 +105,7 @@ export function ReportsFilter({ categories, brands }: ReportsFilterProps) {
             </div>
 
             <div className="space-y-2 w-full lg:flex-1">
-               <Label>End Date</Label>
+               <Label>Конечная дата</Label>
                <div className="flex flex-grow gap-2">
                   <div className="relative w-full">
                      <DatePicker
@@ -121,7 +121,7 @@ export function ReportsFilter({ categories, brands }: ReportsFilterProps) {
             </div>
 
             <div className="space-y-2 w-full lg:flex-1">
-               <Label>Categories</Label>
+               <Label>Категории</Label>
                <Select
                   defaultValue={selectedFilters.category}
                   onValueChange={(value) =>
@@ -129,10 +129,10 @@ export function ReportsFilter({ categories, brands }: ReportsFilterProps) {
                   }
                >
                   <SelectTrigger className="w-full">
-                     <SelectValue placeholder="Select category" />
+                     <SelectValue placeholder="Выберите категорию" />
                   </SelectTrigger>
                   <SelectContent>
-                     <SelectItem value="all">All Categories</SelectItem>
+                     <SelectItem value="all">Все категории</SelectItem>
                      {categories.map((category) => (
                         <SelectItem
                            key={category}
@@ -147,7 +147,7 @@ export function ReportsFilter({ categories, brands }: ReportsFilterProps) {
             </div>
 
             <div className="space-y-2 w-full lg:flex-1">
-               <Label>Brand</Label>
+               <Label>Бренды</Label>
                <Select
                   defaultValue={selectedFilters.brand}
                   onValueChange={(value) =>
@@ -155,10 +155,10 @@ export function ReportsFilter({ categories, brands }: ReportsFilterProps) {
                   }
                >
                   <SelectTrigger className="w-full">
-                     <SelectValue placeholder="Select brand" />
+                     <SelectValue placeholder="Выберите бренд" />
                   </SelectTrigger>
                   <SelectContent>
-                     <SelectItem value="all">All Brands</SelectItem>
+                     <SelectItem value="all">Все бренды</SelectItem>
                      {brands.map((brand) => (
                         <SelectItem key={brand} value={brand} id={brand}>
                            {brand}
@@ -170,9 +170,9 @@ export function ReportsFilter({ categories, brands }: ReportsFilterProps) {
          </div>
 
          <div className="flex gap-2 mt-4">
-            <Button onClick={handleSubmitFilters}>Apply Filters</Button>
+            <Button onClick={handleSubmitFilters}>Применить фильтры</Button>
             <Button onClick={handleClearFilters} variant="outline">
-               Reset
+               Сбросить
             </Button>
          </div>
       </>

@@ -16,11 +16,11 @@ export type BrandColumn = {
 export const columns: ColumnDef<BrandColumn>[] = [
    {
       accessorKey: 'title',
-      header: 'Title',
+      header: 'Название',
    },
    {
       accessorKey: 'products',
-      header: 'Products #',
+      header: 'Количество товаров',
    },
    {
       id: 'actions',

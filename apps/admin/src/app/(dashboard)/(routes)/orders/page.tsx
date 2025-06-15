@@ -72,8 +72,8 @@ export default async function OrdersPage({ searchParams }) {
    return (
       <div className="block space-y-4 my-6">
          <Heading
-            title={`Orders (${orders.length})`}
-            description="Manage orders for your store"
+            title={`Заказы (${orders.length})`}
+            description="Управляйте заказами вашего магазина"
          />
          <Separator />
          <div className="grid grid-cols-4 gap-2">

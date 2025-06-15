@@ -65,12 +65,12 @@ export function SortBy({ initialData }) {
          }}
       >
          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Sort By" />
+            <SelectValue placeholder="Сортировать по" />
          </SelectTrigger>
          <SelectContent>
-            <SelectItem value="featured">Featured</SelectItem>
-            <SelectItem value="most_expensive">Most Expensive</SelectItem>
-            <SelectItem value="least_expensive">Least Expensive</SelectItem>
+            <SelectItem value="featured">Популярные</SelectItem>
+            <SelectItem value="most_expensive">Самые дорогие</SelectItem>
+            <SelectItem value="least_expensive">Самые дешевые</SelectItem>
          </SelectContent>
       </Select>
    )

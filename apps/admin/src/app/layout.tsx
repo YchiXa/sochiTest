@@ -8,8 +8,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-   title: 'Admin Dashboard',
-   description: 'E-Commerce Store Admin Dashboard',
+   title: 'Панель администратора',
+   description: 'Панель управления интернет-магазином',
 }
 
 export default async function RootLayout({
@@ -18,7 +18,7 @@ export default async function RootLayout({
    children: React.ReactNode
 }) {
    return (
-      <html lang="en">
+      <html lang="ru">
          <body className={inter.className}>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                <ToastProvider />

@@ -21,9 +21,9 @@ import { toast } from 'react-hot-toast'
 import * as z from 'zod'
 
 const formSchema = z.object({
-   name: z.string().min(1),
-   email: z.string().min(1),
-   phone: z.string().min(1),
+   name: z.string().min(1, 'Имя обязательно'),
+   email: z.string().min(1, 'Email обязателен'),
+   phone: z.string().min(1, 'Телефон обязателен'),
    isBanned: z.boolean().default(false).optional(),
 })
 
@@ -39,8 +39,8 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
 
    const [loading, setLoading] = useState(false)
 
-   const toastMessage = 'User updated.'
-   const action = 'Save changes'
+   const toastMessage = 'Пользователь обновлен.'
+   const action = 'Сохранить изменения'
 
    const defaultValues = initialData
       ? {
@@ -80,7 +80,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
          router.push(`/products`)
          toast.success(toastMessage)
       } catch (error: any) {
-         toast.error('Something went wrong.')
+         toast.error('Что-то пошло не так.')
       } finally {
          setLoading(false)
       }
@@ -97,11 +97,11 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                name="name"
                render={({ field }) => (
                   <FormItem>
-                     <FormLabel>Name</FormLabel>
+                     <FormLabel>Имя</FormLabel>
                      <FormControl>
                         <Input
                            disabled={loading}
-                           placeholder="Full Name"
+                           placeholder="Полное имя"
                            {...field}
                         />
                      </FormControl>
@@ -118,7 +118,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                      <FormControl>
                         <Input
                            disabled={loading}
-                           placeholder="Email"
+                           placeholder="example@mail.com"
                            {...field}
                         />
                      </FormControl>
@@ -131,11 +131,11 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                name="phone"
                render={({ field }) => (
                   <FormItem>
-                     <FormLabel>Phone</FormLabel>
+                     <FormLabel>Телефон</FormLabel>
                      <FormControl>
                         <Input
                            disabled={loading}
-                           placeholder="Phone"
+                           placeholder="+7 (999) 123-45-67"
                            {...field}
                         />
                      </FormControl>
@@ -155,10 +155,10 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                         />
                      </FormControl>
                      <div className="space-y-1 leading-none">
-                        <FormLabel>Banned</FormLabel>
+                        <FormLabel>Заблокирован</FormLabel>
                         <FormDescription>
-                           This user will not be able to submit reviews or
-                           orders.
+                           Этот пользователь не сможет оставлять отзывы или
+                           оформлять заказы.
                         </FormDescription>
                      </div>
                   </FormItem>

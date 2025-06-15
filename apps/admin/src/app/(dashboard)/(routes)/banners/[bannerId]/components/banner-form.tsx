@@ -1,15 +1,6 @@
 'use client'
 
-import * as z from 'zod'
-import { useState } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { toast } from 'react-hot-toast'
-import { Trash } from 'lucide-react'
-import { Banner } from '@prisma/client'
-import { useParams, useRouter } from 'next/navigation'
-
-import { Input } from '@/components/ui/input'
+import { AlertModal } from '@/components/modals/alert-modal'
 import { Button } from '@/components/ui/button'
 import {
    Form,
@@ -19,14 +10,22 @@ import {
    FormLabel,
    FormMessage,
 } from '@/components/ui/form'
-import { Separator } from '@/components/ui/separator'
 import { Heading } from '@/components/ui/heading'
-import { AlertModal } from '@/components/modals/alert-modal'
 import ImageUpload from '@/components/ui/image-upload'
+import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Banner } from '@prisma/client'
+import { Trash } from 'lucide-react'
+import { useParams, useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
+import * as z from 'zod'
 
 const formSchema = z.object({
-   label: z.string().min(1),
-   image: z.string().min(1),
+   label: z.string().min(1, 'Название обязательно'),
+   image: z.string().min(1, 'Изображение обязательно'),
 })
 
 type BannerFormValues = z.infer<typeof formSchema>
@@ -42,10 +41,12 @@ export const BannerForm: React.FC<BannerFormProps> = ({ initialData }) => {
    const [open, setOpen] = useState(false)
    const [loading, setLoading] = useState(false)
 
-   const title = initialData ? 'Edit banner' : 'Create banner'
-   const description = initialData ? 'Edit a banner.' : 'Add a new banner'
-   const toastMessage = initialData ? 'Banner updated.' : 'Banner created.'
-   const action = initialData ? 'Save changes' : 'Create'
+   const title = initialData ? 'Редактировать баннер' : 'Создать баннер'
+   const description = initialData
+      ? 'Редактирование баннера.'
+      : 'Добавить новый баннер'
+   const toastMessage = initialData ? 'Баннер обновлен.' : 'Баннер создан.'
+   const action = initialData ? 'Сохранить изменения' : 'Создать'
 
    const form = useForm<BannerFormValues>({
       resolver: zodResolver(formSchema),
@@ -75,7 +76,7 @@ export const BannerForm: React.FC<BannerFormProps> = ({ initialData }) => {
          router.push(`/banners`)
          toast.success(toastMessage)
       } catch (error: any) {
-         toast.error('Something went wrong.')
+         toast.error('Что-то пошло не так.')
       } finally {
          setLoading(false)
       }
@@ -92,10 +93,10 @@ export const BannerForm: React.FC<BannerFormProps> = ({ initialData }) => {
 
          router.refresh()
          router.push(`/banners`)
-         toast.success('Banner deleted.')
+         toast.success('Баннер удален.')
       } catch (error: any) {
          toast.error(
-            'Make sure you removed all categories using this banner first.'
+            'Убедитесь, что вы удалили все категории, использующие этот баннер.'
          )
       } finally {
          setLoading(false)
@@ -135,7 +136,7 @@ export const BannerForm: React.FC<BannerFormProps> = ({ initialData }) => {
                   name="image"
                   render={({ field }) => (
                      <FormItem>
-                        <FormLabel>Background image</FormLabel>
+                        <FormLabel>Фоновое изображение</FormLabel>
                         <FormControl>
                            <ImageUpload
                               value={field.value ? [field.value] : []}
@@ -154,11 +155,11 @@ export const BannerForm: React.FC<BannerFormProps> = ({ initialData }) => {
                      name="label"
                      render={({ field }) => (
                         <FormItem>
-                           <FormLabel>Label</FormLabel>
+                           <FormLabel>Название</FormLabel>
                            <FormControl>
                               <Input
                                  disabled={loading}
-                                 placeholder="Banner label"
+                                 placeholder="Введите название баннера"
                                  {...field}
                               />
                            </FormControl>

@@ -21,35 +21,36 @@ import { toast } from 'react-hot-toast'
 import * as z from 'zod'
 
 const formSchema = z.object({
-   status: z.string().min(1),
-   shipping: z.coerce.number().min(1),
-   payable: z.coerce.number().min(1),
-   discount: z.coerce.number().min(0),
+   status: z.string().min(1, 'Статус обязателен'),
+   shipping: z.coerce.number().min(1, 'Стоимость доставки обязательна'),
+   payable: z.coerce.number().min(1, 'Сумма к оплате обязательна'),
+   discount: z.coerce.number().min(0, 'Скидка не может быть отрицательной'),
    isPaid: z.boolean().default(false).optional(),
    isCompleted: z.boolean().default(false).optional(),
 })
 
-type ProductFormValues = z.infer<typeof formSchema>
+type OrderFormValues = z.infer<typeof formSchema>
 
-interface ProductFormProps {
+interface OrderFormProps {
    initialData: OrderWithIncludes | null
 }
 
-export const OrderForm: React.FC<ProductFormProps> = ({ initialData }) => {
+export const OrderForm = ({ initialData }: OrderFormProps): JSX.Element => {
    const params = useParams()
    const router = useRouter()
-
    const [loading, setLoading] = useState(false)
-
-   const toastMessage = 'Order updated.'
-   const action = 'Save changes'
 
    const defaultValues = initialData
       ? {
-           ...initialData,
+           status: initialData.status,
+           shipping: initialData.shipping,
+           payable: initialData.payable,
+           discount: initialData.discount,
+           isPaid: initialData.isPaid,
+           isCompleted: initialData.isCompleted,
         }
       : {
-           status: '---',
+           status: '',
            shipping: 0,
            payable: 0,
            discount: 0,
@@ -57,23 +58,23 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData }) => {
            isCompleted: false,
         }
 
-   const form = useForm<ProductFormValues>({
+   const form = useForm<OrderFormValues>({
       resolver: zodResolver(formSchema),
       defaultValues,
    })
 
-   const onSubmit = async (data: ProductFormValues) => {
+   const onSubmit = async (data: OrderFormValues) => {
       try {
          setLoading(true)
 
          if (initialData) {
-            await fetch(`/api/products/${params.productId}`, {
+            await fetch(`/api/orders/${params.orderId}`, {
                method: 'PATCH',
                body: JSON.stringify(data),
                cache: 'no-store',
             })
          } else {
-            await fetch(`/api/products`, {
+            await fetch(`/api/orders`, {
                method: 'POST',
                body: JSON.stringify(data),
                cache: 'no-store',
@@ -81,10 +82,10 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData }) => {
          }
 
          router.refresh()
-         router.push(`/products`)
-         toast.success(toastMessage)
+         router.push(`/orders`)
+         toast.success(initialData ? 'Заказ обновлен.' : 'Заказ создан.')
       } catch (error: any) {
-         toast.error('Something went wrong.')
+         toast.error('Что-то пошло не так.')
       } finally {
          setLoading(false)
       }
@@ -94,104 +95,125 @@ export const OrderForm: React.FC<ProductFormProps> = ({ initialData }) => {
       <Form {...form}>
          <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="block space-y-2 w-full"
+            className="space-y-8 w-full"
          >
-            <FormField
-               control={form.control}
-               name="shipping"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Price</FormLabel>
-                     <FormControl>
-                        <Input
-                           type="number"
-                           disabled={loading}
-                           placeholder="9.99"
-                           {...field}
-                        />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
-            <FormField
-               control={form.control}
-               name="payable"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Discount</FormLabel>
-                     <FormControl>
-                        <Input
-                           type="number"
-                           disabled={loading}
-                           placeholder="9.99"
-                           {...field}
-                        />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
-            <FormField
-               control={form.control}
-               name="discount"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Discount</FormLabel>
-                     <FormControl>
-                        <Input
-                           type="number"
-                           disabled={loading}
-                           placeholder="9.99"
-                           {...field}
-                        />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
-            <FormField
-               control={form.control}
-               name="isPaid"
-               render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                     <FormControl>
-                        <Checkbox
-                           checked={field.value}
-                           onCheckedChange={field.onChange}
-                        />
-                     </FormControl>
-                     <div className="space-y-1 leading-none">
-                        <FormLabel>Featured</FormLabel>
-                        <FormDescription>
-                           This product will appear on the home page
-                        </FormDescription>
-                     </div>
-                  </FormItem>
-               )}
-            />
-            <FormField
-               control={form.control}
-               name="isCompleted"
-               render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                     <FormControl>
-                        <Checkbox
-                           checked={field.value}
-                           onCheckedChange={field.onChange}
-                        />
-                     </FormControl>
-                     <div className="space-y-1 leading-none">
-                        <FormLabel>Available</FormLabel>
-                        <FormDescription>
-                           This product will appear in the store.
-                        </FormDescription>
-                     </div>
-                  </FormItem>
-               )}
-            />
+            <div className="grid grid-cols-3 gap-8">
+               <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Статус</FormLabel>
+                        <FormControl>
+                           <Input
+                              disabled={loading}
+                              placeholder="Статус заказа"
+                              {...field}
+                           />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+               <FormField
+                  control={form.control}
+                  name="shipping"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Доставка</FormLabel>
+                        <FormControl>
+                           <Input
+                              type="number"
+                              disabled={loading}
+                              placeholder="0.00"
+                              {...field}
+                           />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+               <FormField
+                  control={form.control}
+                  name="payable"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>К оплате</FormLabel>
+                        <FormControl>
+                           <Input
+                              type="number"
+                              disabled={loading}
+                              placeholder="0.00"
+                              {...field}
+                           />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+               <FormField
+                  control={form.control}
+                  name="discount"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Скидка</FormLabel>
+                        <FormControl>
+                           <Input
+                              type="number"
+                              disabled={loading}
+                              placeholder="0.00"
+                              {...field}
+                           />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+            </div>
+            <div className="grid grid-cols-2 gap-8">
+               <FormField
+                  control={form.control}
+                  name="isPaid"
+                  render={({ field }) => (
+                     <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                           <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                           />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                           <FormLabel>Оплачен</FormLabel>
+                           <FormDescription>
+                              Заказ был оплачен покупателем.
+                           </FormDescription>
+                        </div>
+                     </FormItem>
+                  )}
+               />
+               <FormField
+                  control={form.control}
+                  name="isCompleted"
+                  render={({ field }) => (
+                     <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                           <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                           />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                           <FormLabel>Завершен</FormLabel>
+                           <FormDescription>
+                              Заказ был доставлен и завершен.
+                           </FormDescription>
+                        </div>
+                     </FormItem>
+                  )}
+               />
+            </div>
             <Button disabled={loading} className="ml-auto" type="submit">
-               {action}
+               {initialData ? 'Сохранить изменения' : 'Создать заказ'}
             </Button>
          </form>
       </Form>

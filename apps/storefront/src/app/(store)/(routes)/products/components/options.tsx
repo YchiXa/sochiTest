@@ -68,9 +68,9 @@ export function SortBy({ initialData }) {
             <SelectValue placeholder="Sort By" />
          </SelectTrigger>
          <SelectContent>
-            <SelectItem value="featured">Featured</SelectItem>
-            <SelectItem value="most_expensive">Most Expensive</SelectItem>
-            <SelectItem value="least_expensive">Least Expensive</SelectItem>
+            <SelectItem value="featured">Скоро Будет</SelectItem>
+            <SelectItem value="most_expensive">Самое Дорогое</SelectItem>
+            <SelectItem value="least_expensive">Самое Дешовое</SelectItem>
          </SelectContent>
       </Select>
    )
@@ -103,13 +103,13 @@ export function CategoriesCombobox({ categories, initialCategory }) {
                aria-expanded={open}
                className="w-full justify-between"
             >
-               {value ? getCategoryTitle() : 'Select category...'}
+               {value ? getCategoryTitle() : 'Выберите категорию...'}
                <ChevronsUpDown className="ml-2 h-4 shrink-0 opacity-50" />
             </Button>
          </PopoverTrigger>
          <PopoverContent className="w-full p-0">
             <Command>
-               <CommandInput placeholder="Search category..." />
+               <CommandInput placeholder="Найдите категорию..." />
                <CommandEmpty>No category found.</CommandEmpty>
                <CommandGroup>
                   {categories.map((category) => (
@@ -185,13 +185,13 @@ export function BrandCombobox({ brands, initialBrand }) {
                aria-expanded={open}
                className="w-full justify-between"
             >
-               {value ? getBrandTitle() : 'Select brand...'}
+               {value ? getBrandTitle() : 'Выберите бренд...'}
                <ChevronsUpDown className="ml-2 h-4 shrink-0 opacity-50" />
             </Button>
          </PopoverTrigger>
          <PopoverContent className="w-full p-0">
             <Command>
-               <CommandInput placeholder="Search brand..." />
+               <CommandInput placeholder="Найдите бренд..." />
                <CommandEmpty>No brand found.</CommandEmpty>
                <CommandGroup>
                   {brands.map((brand) => (
@@ -277,7 +277,7 @@ export function AvailableToggle({ initialData }) {
                }}
                id="available"
             />
-            <Label htmlFor="available">Only Available</Label>
+            <Label htmlFor="available">Только Доступное</Label>
          </div>
       </div>
    )

@@ -41,8 +41,12 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ initialData }) => {
 
    const [loading, setLoading] = useState(false)
 
-   const toastMessage = 'Order updated.'
-   const action = 'Save changes'
+   const title = initialData ? 'Редактировать платеж' : 'Создать платеж'
+   const description = initialData
+      ? 'Редактирование платежа.'
+      : 'Добавить новый платеж'
+   const toastMessage = initialData ? 'Платеж обновлен.' : 'Платеж создан.'
+   const action = initialData ? 'Сохранить изменения' : 'Создать'
 
    const defaultValues = initialData
       ? {
@@ -84,7 +88,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ initialData }) => {
          router.push(`/products`)
          toast.success(toastMessage)
       } catch (error: any) {
-         toast.error('Something went wrong.')
+         toast.error('Что-то пошло не так.')
       } finally {
          setLoading(false)
       }
@@ -102,12 +106,12 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ initialData }) => {
                   name="shipping"
                   render={({ field }) => (
                      <FormItem>
-                        <FormLabel>Price</FormLabel>
+                        <FormLabel>Стоимость доставки</FormLabel>
                         <FormControl>
                            <Input
                               type="number"
                               disabled={loading}
-                              placeholder="9.99"
+                              placeholder="0.00"
                               {...field}
                            />
                         </FormControl>
@@ -120,12 +124,12 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ initialData }) => {
                   name="payable"
                   render={({ field }) => (
                      <FormItem>
-                        <FormLabel>Discount</FormLabel>
+                        <FormLabel>К оплате</FormLabel>
                         <FormControl>
                            <Input
                               type="number"
                               disabled={loading}
-                              placeholder="9.99"
+                              placeholder="0.00"
                               {...field}
                            />
                         </FormControl>
@@ -138,7 +142,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ initialData }) => {
                   name="discount"
                   render={({ field }) => (
                      <FormItem>
-                        <FormLabel>Discount</FormLabel>
+                        <FormLabel>Скидка</FormLabel>
                         <FormControl>
                            <Input
                               type="number"
@@ -163,9 +167,9 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ initialData }) => {
                            />
                         </FormControl>
                         <div className="space-y-1 leading-none">
-                           <FormLabel>Featured</FormLabel>
+                           <FormLabel>Оплачен</FormLabel>
                            <FormDescription>
-                              This product will appear on the home page
+                              Этот заказ будет отмечен как оплаченный
                            </FormDescription>
                         </div>
                      </FormItem>
@@ -183,9 +187,9 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ initialData }) => {
                            />
                         </FormControl>
                         <div className="space-y-1 leading-none">
-                           <FormLabel>Available</FormLabel>
+                           <FormLabel>Доступен</FormLabel>
                            <FormDescription>
-                              This product will appear in the store.
+                              Этот платеж будет отображаться в системе.
                            </FormDescription>
                         </div>
                      </FormItem>

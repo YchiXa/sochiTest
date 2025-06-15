@@ -84,14 +84,14 @@ const Breadcrumbs = ({ product }) => {
                   href="/"
                   className="inline-flex items-center text-sm font-medium"
                >
-                  Home
+                  Главная
                </Link>
             </li>
             <li>
                <div className="flex items-center gap-2">
                   <ChevronRightIcon className="h-4" />
                   <Link className="text-sm font-medium" href="/products">
-                     Products
+                     Продукты
                   </Link>
                </div>
             </li>

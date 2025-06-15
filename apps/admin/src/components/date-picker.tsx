@@ -32,7 +32,7 @@ export function DatePicker({ date, handleChangeDate }: DatePickerProps) {
                {date ? (
                   <span className="block pl-2">{format(date, 'PPP')}</span>
                ) : (
-                  <span className="block pl-2">Pick a date</span>
+                  <span className="block pl-2">Выберите дату</span>
                )}
             </Button>
          </PopoverTrigger>

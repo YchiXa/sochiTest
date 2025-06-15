@@ -1,5 +1,5 @@
 const config = {
-   name: 'Store',
+   name: 'Магазин',
    handle: '@sesto_dev',
    url: 'https://pasargad.vercel.app',
    ogImage:

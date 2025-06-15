@@ -25,19 +25,19 @@ export type OrderColumn = {
 export const OrderColumns: ColumnDef<OrderColumn>[] = [
    {
       accessorKey: 'number',
-      header: 'Order Number',
+      header: 'Номер заказа',
    },
    {
       accessorKey: 'date',
-      header: 'Date',
+      header: 'Дата',
    },
    {
       accessorKey: 'payable',
-      header: 'Payable',
+      header: 'К оплате',
    },
    {
       accessorKey: 'isPaid',
-      header: 'Paid',
+      header: 'Оплачен',
       cell: (props) => (props.cell.getValue() ? <CheckIcon /> : <XIcon />),
    },
    {

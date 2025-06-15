@@ -39,27 +39,27 @@ export function Receipt() {
    return (
       <Card className={loading && 'animate-pulse'}>
          <CardHeader className="p-4 pb-0">
-            <h2 className="font-bold tracking-tight">Receipt</h2>
+            <h2 className="font-bold tracking-tight">Чек</h2>
          </CardHeader>
          <CardContent className="p-4 text-sm">
             <div className="block space-y-[1vh]">
                <div className="flex justify-between">
-                  <p>Total Amount</p>
-                  <h3>${calculatePayableCost().totalAmount}</h3>
+                  <p>Общая сумма</p>
+                  <h3>₽{calculatePayableCost().totalAmount}</h3>
                </div>
                <div className="flex justify-between">
-                  <p>Discount Amount</p>
-                  <h3>${calculatePayableCost().discountAmount}</h3>
+                  <p>Сумма скидки</p>
+                  <h3>₽{calculatePayableCost().discountAmount}</h3>
                </div>
                <div className="flex justify-between">
-                  <p>Tax Amount</p>
-                  <h3>${calculatePayableCost().taxAmount}</h3>
+                  <p>Сумма налога</p>
+                  <h3>₽{calculatePayableCost().taxAmount}</h3>
                </div>
             </div>
             <Separator className="my-4" />
             <div className="flex justify-between">
-               <p>Payable Amount</p>
-               <h3>${calculatePayableCost().payableAmount}</h3>
+               <p>Итого к оплате</p>
+               <h3>₽{calculatePayableCost().payableAmount}</h3>
             </div>
          </CardContent>
          <Separator />
@@ -74,7 +74,7 @@ export function Receipt() {
                   }
                   className="w-full"
                >
-                  Checkout
+                  Оформить заказ
                </Button>
             </Link>
          </CardFooter>

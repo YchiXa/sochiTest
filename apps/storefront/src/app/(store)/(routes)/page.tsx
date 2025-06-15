@@ -31,13 +31,13 @@ export default async function Index({ searchParams }: IndexPageProps) {
          <Separator className="my-8" />
          {products.length ? (
             <Heading
-               title="Products"
-               description="Below is a list of products we have available for you."
+               title="Товары"
+               description="Ниже представлен список товаров, доступных для вас."
             />
          ) : (
             <Heading
-               title="No Products Found"
-               description="We weren't able to retriev any products..."
+               title="Товары не найдены"
+               description="Не удалось получить ни одного товара..."
             />
          )}
 

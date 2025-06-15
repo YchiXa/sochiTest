@@ -17,15 +17,15 @@ export default async function Products({ searchParams }) {
    return (
       <>
          <Heading
-            title="Products"
-            description="Below is a list of products you have in your cart."
+            title="Товары"
+            description="Ниже представлен список товаров в вашей корзине."
          />
          <SearchSection brands={brands} categories={categories} />
          <Separator />
          {products.length === 0 && (
             <Heading
-               title="No Products Found"
-               description="We weren't able to retriev any products..."
+               title="Товары не найдены"
+               description="Не удалось получить ни одного товара..."
             />
          )}
          {isVariableValid(products) ? (

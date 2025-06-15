@@ -52,42 +52,42 @@ export function UserNav() {
                <Link href="/profile/addresses">
                   <DropdownMenuItem className="flex gap-2">
                      <MapPinIcon className="h-4" />
-                     Edit Addresses
+                     Адреса
                   </DropdownMenuItem>
                </Link>
                <Link href="/profile/edit">
                   <DropdownMenuItem className="flex gap-2">
                      <UserIcon className="h-4" />
-                     Edit Profile
+                     Профиль
                   </DropdownMenuItem>
                </Link>
                <Link href="/profile/orders">
                   <DropdownMenuItem className="flex gap-2">
                      <ListOrderedIcon className="h-4" />
-                     Orders
+                     Заказы
                   </DropdownMenuItem>
                </Link>
                <Link href="/profile/payments">
                   <DropdownMenuItem className="flex gap-2">
                      <CreditCardIcon className="h-4" />
-                     Payments
+                     Платежи
                   </DropdownMenuItem>
                </Link>
                <DropdownMenuSeparator />
                <Link href="/cart">
                   <DropdownMenuItem className="flex gap-2">
-                     <ShoppingBasketIcon className="h-4" /> Cart
+                     <ShoppingBasketIcon className="h-4" /> Корзина
                   </DropdownMenuItem>
                </Link>
                <Link href="/wishlist">
                   <DropdownMenuItem className="flex gap-2">
-                     <HeartIcon className="h-4" /> Wishlist
+                     <HeartIcon className="h-4" /> Избранное
                   </DropdownMenuItem>
                </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="flex gap-2" onClick={onLogout}>
-               <LogOutIcon className="h-4" /> Logout
+               <LogOutIcon className="h-4" /> Выйти
             </DropdownMenuItem>
          </DropdownMenuContent>
       </DropdownMenu>

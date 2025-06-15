@@ -48,20 +48,20 @@ export function SearchMenu({ categories, brands }: SearchMenuProps) {
                className="w-full justify-start text-muted-foreground"
             >
                <Search className="mr-2 h-4 w-4" />
-               Search...
+               Поиск...
             </Button>
          </DialogTrigger>
          <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-               <DialogTitle>Search Products</DialogTitle>
+               <DialogTitle>Поиск товаров</DialogTitle>
                <DialogDescription>
-                  Search for your product using advanced filters.
+                  Поиск товаров с помощью расширенных фильтров.
                </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
                <div className="grid gap-2">
                   <Input
-                     placeholder="Search Text"
+                     placeholder="Поиск..."
                      className="h-10"
                      onChange={(e) =>
                         handleSearchWithQueryParam('search', e.target.value)
@@ -78,21 +78,21 @@ export function SearchMenu({ categories, brands }: SearchMenuProps) {
                      }
                   >
                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Order By" />
+                        <SelectValue placeholder="Сортировка" />
                      </SelectTrigger>
 
                      <SelectContent>
                         <SelectItem value="price-desc">
-                           Most expensive products
+                           Сначала дорогие
                         </SelectItem>
                         <SelectItem value="price-asc">
-                           Cheapest products
+                           Сначала дешевые
                         </SelectItem>
                         <SelectItem value="title-asc">
-                           Title in ascending order (A-Z)
+                           По названию (А-Я)
                         </SelectItem>
                         <SelectItem value="title-desc">
-                           Title in descending order (Z-A)
+                           По названию (Я-А)
                         </SelectItem>
                      </SelectContent>
                   </Select>
@@ -100,7 +100,7 @@ export function SearchMenu({ categories, brands }: SearchMenuProps) {
 
                <section className="grid grid-cols-2 gap-x-3">
                   <div className="grid gap-2">
-                     <h3 className="text-sm font-medium">Categories</h3>
+                     <h3 className="text-sm font-medium">Категории</h3>
                      <div className="grid gap-2">
                         {categories.map((category) => (
                            <div
@@ -136,7 +136,7 @@ export function SearchMenu({ categories, brands }: SearchMenuProps) {
                   </div>
 
                   <div className="grid gap-2">
-                     <h3 className="text-sm font-medium">Brand</h3>
+                     <h3 className="text-sm font-medium">Бренды</h3>
                      <div className="grid gap-2">
                         {brands.map((brand) => (
                            <div
@@ -173,7 +173,7 @@ export function SearchMenu({ categories, brands }: SearchMenuProps) {
                </section>
 
                <div className="grid gap-2">
-                  <h3 className="text-sm font-medium">Price Range</h3>
+                  <h3 className="text-sm font-medium">Ценовой диапазон</h3>
                   <Slider
                      defaultValue={[0, 1000]}
                      max={1000}
@@ -184,7 +184,7 @@ export function SearchMenu({ categories, brands }: SearchMenuProps) {
                   />
                   <div className="flex items-center justify-between">
                      <div className="grid gap-1">
-                        <Label htmlFor="min-price">Min Price</Label>
+                        <Label htmlFor="min-price">Мин. цена</Label>
                         <Input
                            id="min-price"
                            type="number"
@@ -199,7 +199,7 @@ export function SearchMenu({ categories, brands }: SearchMenuProps) {
                         />
                      </div>
                      <div className="grid gap-1">
-                        <Label htmlFor="max-price">Max Price</Label>
+                        <Label htmlFor="max-price">Макс. цена</Label>
                         <Input
                            id="max-price"
                            type="number"

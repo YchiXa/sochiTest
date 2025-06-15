@@ -16,10 +16,10 @@ import { forwardRef } from 'react'
 
 const components: { title: string; href: string; description: string }[] = [
    {
-      title: 'Alert Dialog',
+      title: 'Диалоговое окно',
       href: '/docs/primitives/alert-dialog',
       description:
-         'A modal dialog that interrupts the user with important content and expects a response.',
+         'Модальное окно, которое прерывает пользователя важным контентом и ожидает ответа.',
    },
 ]
 
@@ -44,7 +44,7 @@ export function NavMenu() {
                <Link href="/products" legacyBehavior passHref>
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                      <div className="font-normal text-foreground/70">
-                        Products
+                        Товары
                      </div>
                   </NavigationMenuLink>
                </Link>
@@ -52,7 +52,7 @@ export function NavMenu() {
             <NavigationMenuItem>
                <NavigationMenuTrigger>
                   <div className="font-normal text-foreground/70">
-                     Categories
+                     Категории
                   </div>
                </NavigationMenuTrigger>
                <NavigationMenuContent>
@@ -67,31 +67,32 @@ export function NavMenu() {
                                  shadcn/ui
                               </div>
                               <p className="text-sm leading-tight text-muted-foreground">
-                                 Beautifully designed components built with
-                                 Radix UI and Tailwind CSS.
+                                 Красиво оформленные компоненты, созданные с
+                                 использованием Radix UI и Tailwind CSS.
                               </p>
                            </Link>
                         </NavigationMenuLink>
                      </li>
-                     <ListItem href="/docs" title="Introduction">
-                        Re-usable components built using Radix UI and Tailwind
-                        CSS.
+                     <ListItem href="/docs" title="Введение">
+                        Повторно используемые компоненты, созданные с
+                        использованием Radix UI и Tailwind CSS.
                      </ListItem>
-                     <ListItem href="/docs/installation" title="Installation">
-                        How to install dependencies and structure your app.
+                     <ListItem href="/docs/installation" title="Установка">
+                        Как установить зависимости и структурировать ваше
+                        приложение.
                      </ListItem>
                      <ListItem
                         href="/docs/primitives/typography"
-                        title="Typography"
+                        title="Типография"
                      >
-                        Styles for headings, paragraphs, lists...etc
+                        Стили для заголовков, абзацев, списков и т.д.
                      </ListItem>
                   </ul>
                </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
                <NavigationMenuTrigger>
-                  <div className="font-normal text-foreground/70">Brands</div>
+                  <div className="font-normal text-foreground/70">Бренды</div>
                </NavigationMenuTrigger>
                <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-2 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">

@@ -1,6 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+   Table,
+   TableBody,
+   TableCell,
+   TableHead,
+   TableHeader,
+   TableRow,
+} from '@/components/ui/table'
 import {
    ColumnDef,
    ColumnFiltersState,
@@ -10,17 +19,7 @@ import {
    getPaginationRowModel,
    useReactTable,
 } from '@tanstack/react-table'
-
-import {
-   Table,
-   TableBody,
-   TableCell,
-   TableHead,
-   TableHeader,
-   TableRow,
-} from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { useState } from 'react'
 
 interface DataTableProps<TData, TValue> {
    columns: ColumnDef<TData, TValue>[]
@@ -91,7 +90,7 @@ export function DataTable<TData, TValue>({
                            colSpan={columns.length}
                            className="h-24 text-center"
                         >
-                           No results.
+                           Нет результатов.
                         </TableCell>
                      </TableRow>
                   )}
@@ -105,7 +104,7 @@ export function DataTable<TData, TValue>({
                onClick={() => table.previousPage()}
                disabled={!table.getCanPreviousPage()}
             >
-               Previous
+               Назад
             </Button>
             <Button
                variant="outline"
@@ -113,7 +112,7 @@ export function DataTable<TData, TValue>({
                onClick={() => table.nextPage()}
                disabled={!table.getCanNextPage()}
             >
-               Next
+               Вперед
             </Button>
          </div>
       </div>

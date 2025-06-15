@@ -104,7 +104,7 @@ export async function POST(req: Request) {
       const notifications = await prisma.notification.createMany({
          data: owners.map((owner) => ({
             userId: owner.id,
-            content: `Order #${order.number} was created was created with a value of $${payable}.`,
+            content: `Заказ #${order.number} был создан на сумму $${payable}.`,
          })),
       })
 
@@ -112,7 +112,7 @@ export async function POST(req: Request) {
          await sendMail({
             name: config.name,
             to: owner.email,
-            subject: 'An order was created.',
+            subject: 'Создан новый заказ.',
             html: await render(
                Mail({
                   id: order.id,

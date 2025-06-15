@@ -5,37 +5,37 @@ import Link from 'next/link'
 
 const data = [
    {
-      label: 'LEGAL',
+      label: 'ПРАВОВАЯ ИНФОРМАЦИЯ',
       links: [
          {
-            label: 'Privacy Policy',
+            label: 'Политика конфиденциальности',
             url: '/privacy',
          },
          {
-            label: 'Terms & Conditions',
+            label: 'Условия использования',
             url: '/terms',
          },
       ],
    },
    {
-      label: 'RESOURCES',
+      label: 'РЕСУРСЫ',
       links: [
          {
-            label: 'Blog',
+            label: 'Блог',
             url: '/blog',
          },
          {
-            label: 'About',
+            label: 'О нас',
             url: '/about',
          },
          {
-            label: 'Contact',
+            label: 'Контакты',
             url: '/contact',
          },
       ],
    },
    {
-      label: 'SUPPORT',
+      label: 'ПОДДЕРЖКА',
       links: [
          {
             label: 'Telegram',
@@ -95,8 +95,8 @@ function Trademark() {
                {config.name}
             </h2>
             <span className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-               © {new Date().getFullYear()} {config.name}™ . All Rights
-               Reserved.
+               © {new Date().getFullYear()} {config.name}™ . Все права
+               защищены.
             </span>
          </span>
       </div>

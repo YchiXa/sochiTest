@@ -41,10 +41,12 @@ export const BrandForm: React.FC<BrandFormProps> = ({ initialData }) => {
    const [open, setOpen] = useState(false)
    const [loading, setLoading] = useState(false)
 
-   const title = initialData ? 'Edit Brand' : 'Create Brand'
-   const description = initialData ? 'Edit a brand.' : 'Add a new brand'
-   const toastMessage = initialData ? 'Brand updated.' : 'Brand created.'
-   const action = initialData ? 'Save changes' : 'Create'
+   const title = initialData ? 'Редактировать бренд' : 'Создать бренд'
+   const description = initialData
+      ? 'Редактирование бренда.'
+      : 'Добавить новый бренд'
+   const toastMessage = initialData ? 'Бренд обновлен.' : 'Бренд создан.'
+   const action = initialData ? 'Сохранить изменения' : 'Создать'
 
    const form = useForm<BrandFormValues>({
       resolver: zodResolver(formSchema),
@@ -75,7 +77,7 @@ export const BrandForm: React.FC<BrandFormProps> = ({ initialData }) => {
          router.push(`/brands`)
          toast.success(toastMessage)
       } catch (error: any) {
-         toast.error('Something went wrong.')
+         toast.error('Что-то пошло не так.')
       } finally {
          setLoading(false)
       }
@@ -92,11 +94,9 @@ export const BrandForm: React.FC<BrandFormProps> = ({ initialData }) => {
 
          router.refresh()
          router.push(`/brands`)
-         toast.success('Brand deleted.')
+         toast.success('Бренд удален.')
       } catch (error: any) {
-         toast.error(
-            'Make sure you removed all products using this brand first.'
-         )
+         toast.error('Убедитесь, что вы удалили все продукты этого бренда.')
       } finally {
          setLoading(false)
          setOpen(false)
@@ -136,11 +136,11 @@ export const BrandForm: React.FC<BrandFormProps> = ({ initialData }) => {
                      name="title"
                      render={({ field }) => (
                         <FormItem>
-                           <FormLabel>Title</FormLabel>
+                           <FormLabel>Название</FormLabel>
                            <FormControl>
                               <Input
                                  disabled={loading}
-                                 placeholder="Brand title"
+                                 placeholder="Название бренда"
                                  {...field}
                               />
                            </FormControl>
@@ -153,11 +153,11 @@ export const BrandForm: React.FC<BrandFormProps> = ({ initialData }) => {
                      name="description"
                      render={({ field }) => (
                         <FormItem>
-                           <FormLabel>Description</FormLabel>
+                           <FormLabel>Описание</FormLabel>
                            <FormControl>
                               <Input
                                  disabled={loading}
-                                 placeholder="Brand description"
+                                 placeholder="Описание бренда"
                                  {...field}
                               />
                            </FormControl>
@@ -170,7 +170,7 @@ export const BrandForm: React.FC<BrandFormProps> = ({ initialData }) => {
                      name="logo"
                      render={({ field }) => (
                         <FormItem>
-                           <FormLabel>Logo URL</FormLabel>
+                           <FormLabel>URL логотипа</FormLabel>
                            <FormControl>
                               <Input
                                  disabled={loading}

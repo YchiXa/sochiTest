@@ -37,7 +37,9 @@ export function CrossSellProductsList({
 
    return (
       <div className="p-6">
-         <h2 className="font-medium text-xl py-4">You might also like</h2>
+         <h2 className="font-medium text-xl py-4">
+            Вам также может понравиться
+         </h2>
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {products.map((product) => (
                <Card key={product.id} className="overflow-hidden">
@@ -72,7 +74,7 @@ export function CrossSellProductsList({
                               onAddToCart(product)
                            }}
                         >
-                           Add to Cart
+                           Добавить в корзину
                         </Button>
                         <Button
                            className="w-full mt-2 block"
@@ -84,7 +86,7 @@ export function CrossSellProductsList({
                               onRemoveFromCart(product)
                            }}
                         >
-                           Remove from Cart
+                           Удалить из корзины
                         </Button>
                      </div>
                   </CardContent>

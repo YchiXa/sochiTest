@@ -32,7 +32,7 @@ export const VercelInviteUserEmail = ({
    payable = '0',
    id = 'My Project',
 }: VercelInviteUserEmailProps) => {
-   const previewText = `Order #${orderNum} was created was created with a value of $${payable}.`
+   const previewText = `Заказ #${orderNum} был создан на сумму $${payable}.`
    const orderLink = process.env.NEXT_PUBLIC_URL + `/orders/${id}`
    return (
       <Html>
@@ -51,14 +51,13 @@ export const VercelInviteUserEmail = ({
                      />
                   </Section>
                   <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
-                     Check the order.
+                     Проверьте заказ.
                   </Heading>
                   <Text className="text-black text-[14px] leading-[24px]">
-                     Hello!
+                     Здравствуйте!
                   </Text>
                   <Text className="text-black text-[14px] leading-[24px]">
-                     Order #{orderNum} was created was created with a value of $
-                     {payable}.
+                     Заказ #{orderNum} был создан на сумму ${payable}.
                   </Text>
 
                   <Section className="text-center mt-[32px] mb-[32px] ">
@@ -66,11 +65,11 @@ export const VercelInviteUserEmail = ({
                         className="px-20 py-12 bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
                         href={orderLink}
                      >
-                        See the order.
+                        Посмотреть заказ.
                      </Button>
                   </Section>
                   <Text className="text-black text-[14px] leading-[24px]">
-                     or copy and paste this URL into your browser:{' '}
+                     или скопируйте и вставьте эту ссылку в браузер:{' '}
                      <Link
                         href={orderLink}
                         className="text-blue-600 no-underline"
@@ -80,9 +79,10 @@ export const VercelInviteUserEmail = ({
                   </Text>
                   <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
                   <Text className="text-[#666666] text-[12px] leading-[24px]">
-                     If you were not expecting this invitation, you can ignore
-                     this email. If you are concerned about your account's
-                     safety, please reply to this email to get in touch with us.
+                     Если вы не ожидали этого уведомления, вы можете
+                     проигнорировать это письмо. Если вы обеспокоены
+                     безопасностью вашей учетной записи, пожалуйста, ответьте на
+                     это письмо, чтобы связаться с нами.
                   </Text>
                </Container>
             </Body>

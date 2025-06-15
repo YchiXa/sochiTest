@@ -67,10 +67,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
    const [searchTerm, setSearchTerm] = useState('')
    const [loading, setLoading] = useState(false)
 
-   const title = initialData ? 'Edit product' : 'Create product'
-   const description = initialData ? 'Edit a product.' : 'Add a new product'
-   const toastMessage = initialData ? 'Product updated.' : 'Product created.'
-   const action = initialData ? 'Save changes' : 'Create'
+   const title = initialData ? 'Редактировать товар' : 'Создать товар'
+   const description = initialData
+      ? 'Редактирование товара.'
+      : 'Добавить новый товар'
+   const toastMessage = initialData ? 'Товар обновлен.' : 'Товар создан.'
+   const action = initialData ? 'Сохранить изменения' : 'Создать'
 
    const defaultValues = initialData
       ? {
@@ -121,7 +123,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
          router.push(`/products`)
          toast.success(toastMessage)
       } catch (error: any) {
-         toast.error('Something went wrong.')
+         toast.error('Что-то пошло не так.')
       } finally {
          setLoading(false)
       }
@@ -138,9 +140,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
          router.refresh()
          router.push(`/products`)
-         toast.success('Product deleted.')
+         toast.success('Товар удален.')
       } catch (error: any) {
-         toast.error('Something went wrong.')
+         toast.error('Что-то пошло не так.')
       } finally {
          setLoading(false)
          setOpen(false)
@@ -179,7 +181,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   name="images"
                   render={({ field }) => (
                      <FormItem>
-                        <FormLabel>Images</FormLabel>
+                        <FormLabel>Изображения</FormLabel>
                         <FormControl>
                            <ImageUpload
                               value={field.value.map((image) => image)}
@@ -206,11 +208,11 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                      name="title"
                      render={({ field }) => (
                         <FormItem>
-                           <FormLabel>Name</FormLabel>
+                           <FormLabel>Название</FormLabel>
                            <FormControl>
                               <Input
                                  disabled={loading}
-                                 placeholder="Product title"
+                                 placeholder="Название товара"
                                  {...field}
                               />
                            </FormControl>
@@ -223,12 +225,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                      name="price"
                      render={({ field }) => (
                         <FormItem>
-                           <FormLabel>Price</FormLabel>
+                           <FormLabel>Цена</FormLabel>
                            <FormControl>
                               <Input
                                  type="number"
                                  disabled={loading}
-                                 placeholder="9.99"
+                                 placeholder="0.00"
                                  {...field}
                               />
                            </FormControl>
@@ -241,12 +243,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                      name="discount"
                      render={({ field }) => (
                         <FormItem>
-                           <FormLabel>Discount</FormLabel>
+                           <FormLabel>Скидка</FormLabel>
                            <FormControl>
                               <Input
                                  type="number"
                                  disabled={loading}
-                                 placeholder="9.99"
+                                 placeholder="0.00"
                                  {...field}
                               />
                            </FormControl>
@@ -259,12 +261,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                      name="stock"
                      render={({ field }) => (
                         <FormItem>
-                           <FormLabel>Stock</FormLabel>
+                           <FormLabel>Количество</FormLabel>
                            <FormControl>
                               <Input
                                  type="number"
                                  disabled={loading}
-                                 placeholder="10"
+                                 placeholder="0"
                                  {...field}
                               />
                            </FormControl>
@@ -277,7 +279,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                      name="categoryId"
                      render={({ field }) => (
                         <FormItem>
-                           <FormLabel>Category</FormLabel>
+                           <FormLabel>Категория</FormLabel>
                            <Select
                               disabled={loading}
                               onValueChange={field.onChange}
@@ -288,7 +290,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                                  <SelectTrigger>
                                     <SelectValue
                                        defaultValue={field.value}
-                                       placeholder="Select a category"
+                                       placeholder="Выберите категорию"
                                     />
                                  </SelectTrigger>
                               </FormControl>

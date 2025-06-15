@@ -31,18 +31,18 @@ export const getGraphRevenue = async (): Promise<GraphData[]> => {
 
    // Converting the grouped data into the format expected by the graph
    const graphData: GraphData[] = [
-      { name: 'Jan', total: 0 },
-      { name: 'Feb', total: 0 },
-      { name: 'Mar', total: 0 },
-      { name: 'Apr', total: 0 },
-      { name: 'May', total: 0 },
-      { name: 'Jun', total: 0 },
-      { name: 'Jul', total: 0 },
-      { name: 'Aug', total: 0 },
-      { name: 'Sep', total: 0 },
-      { name: 'Oct', total: 0 },
-      { name: 'Nov', total: 0 },
-      { name: 'Dec', total: 0 },
+      { name: 'Янв', total: 0 },
+      { name: 'Фев', total: 0 },
+      { name: 'Мар', total: 0 },
+      { name: 'Апр', total: 0 },
+      { name: 'Май', total: 0 },
+      { name: 'Июн', total: 0 },
+      { name: 'Июл', total: 0 },
+      { name: 'Авг', total: 0 },
+      { name: 'Сен', total: 0 },
+      { name: 'Окт', total: 0 },
+      { name: 'Ноя', total: 0 },
+      { name: 'Дек', total: 0 },
    ]
 
    // Filling in the revenue data

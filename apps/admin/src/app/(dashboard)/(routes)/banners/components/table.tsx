@@ -1,12 +1,11 @@
 'use client'
 
-import { DataTable } from '@/components/ui/data-table'
-import { useParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-
+import { DataTable } from '@/components/ui/data-table'
 import { ColumnDef } from '@tanstack/react-table'
-import Link from 'next/link'
 import { EditIcon } from 'lucide-react'
+import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
 
 export type BannersColumn = {
    id: string
@@ -17,11 +16,11 @@ export type BannersColumn = {
 export const columns: ColumnDef<BannersColumn>[] = [
    {
       accessorKey: 'label',
-      header: 'Label',
+      header: 'Название',
    },
    {
       accessorKey: 'createdAt',
-      header: 'Date',
+      header: 'Дата создания',
    },
    {
       id: 'actions',

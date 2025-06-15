@@ -13,47 +13,47 @@ export function MainNav({
    const routes = [
       {
          href: `/banners`,
-         label: 'Banners',
+         label: 'Баннеры',
          active: pathname.includes(`/banners`),
       },
       {
          href: `/categories`,
-         label: 'Categories',
+         label: 'Категории',
          active: pathname.includes(`/categories`),
       },
       {
          href: `/products`,
-         label: 'Products',
+         label: 'Товары',
          active: pathname.includes(`/products`),
       },
       {
          href: `/orders`,
-         label: 'Orders',
+         label: 'Заказы',
          active: pathname.includes(`/orders`),
       },
       {
          href: `/payments`,
-         label: 'Payments',
+         label: 'Платежи',
          active: pathname.includes(`/payments`),
       },
       {
          href: `/users`,
-         label: 'Users',
+         label: 'Пользователи',
          active: pathname.includes(`/users`),
       },
       {
          href: `/brands`,
-         label: 'Brands',
+         label: 'Бренды',
          active: pathname.includes(`/brands`),
       },
       {
          href: `/codes`,
-         label: 'Codes',
+         label: 'Промокоды',
          active: pathname.includes(`/codes`),
       },
       {
          href: '/reports',
-         label: 'Reports',
+         label: 'Отчеты',
          active: pathname.includes('/reports'),
       },
    ]
